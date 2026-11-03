@@ -1,0 +1,280 @@
+[
+  {
+    "case": {
+      "id": "CASE_1_BUZZWORD_VAPORWARE",
+      "name": "The Buzzword Hand-Wave (Fatal GTM Mismatch)",
+      "idea": "Decentralized AI Quantum Matching Engine for Gen-Z commercial real estate leases with zero sales team and 100% viral word-of-mouth adoption.",
+      "region": "global",
+      "expected_failure_mode": "Ungrounded viral assumption; zero CAC in enterprise sales.",
+      "ground_truth_inconclusive": true
+    },
+    "baseline": {
+      "case_id": "CASE_1_BUZZWORD_VAPORWARE",
+      "case_name": "The Buzzword Hand-Wave (Fatal GTM Mismatch)",
+      "mode": "Baseline (1-Pass)",
+      "score": 50.0,
+      "status": "Yellow",
+      "elapsed_sec": 335.76,
+      "rounds_executed": 1,
+      "is_inconclusive": false,
+      "evidence_voids_detected": 0,
+      "evidence_voids": [],
+      "offline_experiments": [],
+      "epistemic_confidence": 0.85,
+      "audit_critique": "",
+      "source_grounding_index": 0.67,
+      "regional_grounding_ratio": 0.33
+    },
+    "adaptive": {
+      "case_id": "CASE_1_BUZZWORD_VAPORWARE",
+      "case_name": "The Buzzword Hand-Wave (Fatal GTM Mismatch)",
+      "mode": "Adaptive (Meta AI Loop)",
+      "score": 50.0,
+      "status": "Field Discovery",
+      "elapsed_sec": 379.51,
+      "rounds_executed": 2,
+      "is_inconclusive": true,
+      "evidence_voids_detected": 8,
+      "evidence_voids": [
+        "Quantified customer acquisition cost (CAC) for a purely word\u2011of\u2011mouth launch.",
+        "Projected viral adoption metrics (K\u2011factor, referral conversion) for Gen\u2011Z leasing.",
+        "Unit economics: average lease size, gross margin, operating expense, LTV for the decentralized platform.",
+        "Regulatory analysis of blockchain/smart\u2011contract lease execution across key jurisdictions (US, EU, Singapore, APAC).",
+        "Empirical validation of any quantum\u2011computing advantage in property\u2011matching algorithms.",
+        "TAM/SAM/SOM for Gen\u2011Z commercial real\u2011estate leasing specifically (square footage, spend, growth rate).",
+        "Competitor financial or adoption benchmarks for AI\u2011driven matching engines (e.g., Dazzle.ai, VentionTeams).",
+        "Minimum network\u2011effect threshold (active users needed) to generate reliable matches."
+      ],
+      "offline_experiments": [
+        "Run a controlled pilot with a representative Gen\u2011Z cohort to measure willingness to adopt a decentralized AI lease matching tool and capture referral K\u2011factor.",
+        "Commission a legal feasibility study with real\u2011estate lawyers in Singapore, the US, and the EU to map compliance gaps for smart\u2011contract lease execution.",
+        "Develop a minimal viable quantum\u2011enhanced matching prototype and benchmark latency/cost against classical AI models on real listing data."
+      ],
+      "epistemic_confidence": 0.42,
+      "audit_critique": "The dossier is a collage of macro CRE headlines and generic AI adoption stats that never touch the core venture hypotheses. No hard numbers on CAC, LTV, viral K\u2011factor, quantum advantage, or Gen\u2011Z specific lease demand. Regulators, smart\u2011contract legality, and unit economics are glossed over. Contradictory signals (high AI anxiety vs 100% viral adoption; office\u2011centric recovery vs a co\u2011living focus) are ignored. Evidence is superficial and region\u2011agnostic despite a global rollout claim.",
+      "source_grounding_index": 0.56,
+      "regional_grounding_ratio": 0.11
+    }
+  },
+  {
+    "case": {
+      "id": "CASE_2_REGULATORY_CONTRADICTION",
+      "name": "The Contradictory Regulatory Market",
+      "idea": "Cross-border algorithmic remittance and instant debit card platform between Trinidad & Tobago and the US bypassing commercial bank FX queues.",
+      "region": "caribbean",
+      "expected_failure_mode": "Strict Central Bank Exchange Control regulations contradict open crypto access claims.",
+      "ground_truth_inconclusive": false
+    },
+    "baseline": {
+      "case_id": "CASE_2_REGULATORY_CONTRADICTION",
+      "case_name": "The Contradictory Regulatory Market",
+      "mode": "Baseline (1-Pass)",
+      "score": 50.0,
+      "status": "Yellow",
+      "elapsed_sec": 331.23,
+      "rounds_executed": 1,
+      "is_inconclusive": false,
+      "evidence_voids_detected": 0,
+      "evidence_voids": [],
+      "offline_experiments": [],
+      "epistemic_confidence": 0.9,
+      "audit_critique": "",
+      "source_grounding_index": 0.0,
+      "regional_grounding_ratio": 0.0
+    },
+    "adaptive": {
+      "case_id": "CASE_2_REGULATORY_CONTRADICTION",
+      "case_name": "The Contradictory Regulatory Market",
+      "mode": "Adaptive (Meta AI Loop)",
+      "score": 50.0,
+      "status": "Field Discovery",
+      "elapsed_sec": 390.38,
+      "rounds_executed": 2,
+      "is_inconclusive": true,
+      "evidence_voids_detected": 8,
+      "evidence_voids": [
+        "No quantitative estimate of annual US\u2011to\u2011Trinidad & Tobago remittance volume or diaspora size.",
+        "No source or calculation supporting the claim that the platform can deliver <5% total cost.",
+        "No data on current FX processing times or queue lengths for banks in Trinidad & Tobago.",
+        "Absence of regulatory framework details for a non\u2011bank entity to bypass commercial\u2011bank FX queues.",
+        "No cost breakdown for building/operating an algorithmic cross\u2011border FX engine in the Caribbean context.",
+        "No evidence on debit\u2011card issuance rules, costs, or adoption rates in Trinidad & Tobago.",
+        "Missing unit\u2011economic assumptions (CAC, LTV, gross margin) for the proposed business model.",
+        "Reliance on global cost benchmarks (banks 12%, MTOs 5.5%) without Caribbean\u2011specific validation."
+      ],
+      "offline_experiments": [
+        "Run a controlled pilot with a small cohort of US\u2011based senders (n\u224830) to measure actual cost, latency, and settlement success when routing through a prototype algorithmic FX layer.",
+        "Conduct in\u2011depth interviews with at least five officials from the Central Bank of Trinidad and Tobago and the Financial Services Commission to map the legal pathway and potential barriers for a non\u2011bank FX broker.",
+        "Survey a minimum of 150 TT\u2011based recipients to assess willingness to adopt an instant debit card linked to remittance inflows and to gauge trust thresholds."
+      ],
+      "epistemic_confidence": 0.44,
+      "audit_critique": "The package strings together high\u2011level regional trends and generic cost benchmarks but fails to substantiate the core venture hypotheses with Caribbean\u2011specific data. Critical assumptions\u2014US\u2011TT remittance volume, diaspora size, current FX queue latency, licensing path for a non\u2011bank FX broker, and cost structure of an algorithmic platform\u2014are asserted without quantitative backing. Global cost percentages are transplanted onto a market that may have very different fee regimes and regulatory friction. Contradictory signals around FX liquidity (tight market vs. Central Bank's liquidity guarantee) and regulatory readiness are mentioned but never reconciled. Overall the evidence is thin, regionally mismatched, and leans on founder optimism rather than verifiable metrics.",
+      "source_grounding_index": 1.0,
+      "regional_grounding_ratio": 1.0
+    }
+  },
+  {
+    "case": {
+      "id": "CASE_3_OBSCURE_THIN_NICHE",
+      "name": "The Obscure Regional Niche (Data Deficit)",
+      "idea": "Industrial LoRaWAN sub-surface cold storage sensors for indigenous soursop and seamoss cooperative farming in Dominica.",
+      "region": "caribbean",
+      "expected_failure_mode": "Near-zero public web pricing/infrastructure data; requires physical grower validation.",
+      "ground_truth_inconclusive": true
+    },
+    "baseline": {
+      "case_id": "CASE_3_OBSCURE_THIN_NICHE",
+      "case_name": "The Obscure Regional Niche (Data Deficit)",
+      "mode": "Baseline (1-Pass)",
+      "score": 50.0,
+      "status": "Yellow",
+      "elapsed_sec": 329.31,
+      "rounds_executed": 1,
+      "is_inconclusive": false,
+      "evidence_voids_detected": 0,
+      "evidence_voids": [],
+      "offline_experiments": [],
+      "epistemic_confidence": 0.85,
+      "audit_critique": "",
+      "source_grounding_index": 0.0,
+      "regional_grounding_ratio": 0.0
+    },
+    "adaptive": {
+      "case_id": "CASE_3_OBSCURE_THIN_NICHE",
+      "case_name": "The Obscure Regional Niche (Data Deficit)",
+      "mode": "Adaptive (Meta AI Loop)",
+      "score": 50.0,
+      "status": "Field Discovery",
+      "elapsed_sec": 386.71,
+      "rounds_executed": 2,
+      "is_inconclusive": true,
+      "evidence_voids_detected": 6,
+      "evidence_voids": [
+        "No quantitative estimate of LoRaWAN coverage, latency, or subscription cost in Dominica's rural/co\u2011operative zones.",
+        "Absence of unit\u2011economic breakdown for the sensor hardware (CAPEX, OPEX, battery life, maintenance) and its impact on cooperative margins.",
+        "Missing data on the volume and value of Dominican soursop and sea\u2011moss production, and the price premium achievable through traceability.",
+        "No citation of Dominica's export licensing, phytosanitary requirements, or specific duty rates for sea\u2011moss under CARICOM CET.",
+        "Lack of benchmark for customer acquisition cost (CAC) for a B2B cooperative sales model in the Caribbean.",
+        "No evidence of consumer willingness\u2011to\u2011pay for \u201cpremium, traceable\u201d sea\u2011moss from Caribbean buyers versus established Asian suppliers."
+      ],
+      "offline_experiments": [
+        "Deploy a pilot LoRaWAN sensor suite in at least two cooperative cold\u2011storage sites in Dominica for 3\u2011months to capture temperature stability, battery life, and data transmission reliability.",
+        "Conduct a buyer interview series with at least five premium health\u2011food distributors in the US/North America to quantify the price premium they would pay for traceable, Caribbean\u2011sourced sea moss with sensor\u2011verified quality."
+      ],
+      "epistemic_confidence": 0.58,
+      "audit_critique": "The package leans heavily on global sea\u2011moss market numbers and generic Caribbean FMCG trends while offering no hard data on the core hardware proposition, local cooperative economics, or regulatory specifics for Dominica exports. Sensor cost, LoRaWAN network availability, and the financial impact of the quoted import duties are all asserted without quantitative anchors. Regional mismatches abound \u2013 Asian market share is cited to justify demand, yet no Caribbean\u2011specific demand or pricing data for soursop or sea\u2011moss is provided. Contradictory duty information (220% max vs. 5\u201135% average) is left unresolved. Overall, the evidence is insufficient to confirm key venture hypotheses.",
+      "source_grounding_index": 1.0,
+      "regional_grounding_ratio": 1.0
+    }
+  },
+  {
+    "case": {
+      "id": "CASE_4_GROUNDED_B2B_SAAS",
+      "name": "The Grounded B2B SaaS (Established Market)",
+      "idea": "Shopify plugin for automated VAT calculation and tax authority compliant e-invoicing for regional Caribbean eCommerce merchants.",
+      "region": "caribbean",
+      "expected_failure_mode": "None; known market with clear public benchmarks.",
+      "ground_truth_inconclusive": false
+    },
+    "baseline": {
+      "case_id": "CASE_4_GROUNDED_B2B_SAAS",
+      "case_name": "The Grounded B2B SaaS (Established Market)",
+      "mode": "Baseline (1-Pass)",
+      "score": 50.0,
+      "status": "Yellow",
+      "elapsed_sec": 328.66,
+      "rounds_executed": 1,
+      "is_inconclusive": false,
+      "evidence_voids_detected": 0,
+      "evidence_voids": [],
+      "offline_experiments": [],
+      "epistemic_confidence": 0.92,
+      "audit_critique": "",
+      "source_grounding_index": 0.0,
+      "regional_grounding_ratio": 0.0
+    },
+    "adaptive": {
+      "case_id": "CASE_4_GROUNDED_B2B_SAAS",
+      "case_name": "The Grounded B2B SaaS (Established Market)",
+      "mode": "Adaptive (Meta AI Loop)",
+      "score": 50.0,
+      "status": "Field Discovery",
+      "elapsed_sec": 387.6,
+      "rounds_executed": 2,
+      "is_inconclusive": true,
+      "evidence_voids_detected": 6,
+      "evidence_voids": [
+        "Exact number of active Shopify merchants (and Shopify Plus stores) operating in each Caribbean jurisdiction.",
+        "Quantified size of Caribbean e\u2011commerce sales (GMV) relevant to VAT compliance tooling revenue potential.",
+        "Detailed, jurisdiction\u2011specific VAT rates, filing frequencies, e\u2011invoicing legal requirements, and any mandatory integration standards.",
+        "Demonstrated merchant willingness to pay (price sensitivity) and expected CAC/LTV for a tax\u2011automation plugin.",
+        "Competitor coverage matrix showing which existing accounting/invoicing tools support (or fail to support) each Caribbean country's tax rules.",
+        "Projected unit economics (margin assumptions, expected support costs for regulatory updates)."
+      ],
+      "offline_experiments": [
+        "Conduct structured interviews or surveys with a representative sample of Caribbean Shopify merchants to quantify pain points, current manual compliance costs, and price willingness for an automated VAT/e\u2011invoicing solution.",
+        "Run a limited\u2011pilot deployment of the plugin with 5\u201110 merchants across different Caribbean jurisdictions to collect real usage data, CAC, churn, and compliance outcome metrics."
+      ],
+      "epistemic_confidence": 0.45,
+      "audit_critique": "The dossier leans heavily on global Shopify metrics and generic Caribbean e\u2011commerce observations while omitting any hard numbers on the actual addressable market, merchant pain\u2011points, regulatory specifics, and unit economics. Claims of a \"critical gap\" and \"high\u2011volume\" Caribbean Shopify merchants are unsupported, and the data cited often conflicts (e.g., citing precise revenue shares despite stating statistical offices lack data). Regional regulatory nuance is assumed from global trends, creating a substantial evidentiary void and sycophantic validation of the founder's thesis.",
+      "source_grounding_index": 1.0,
+      "regional_grounding_ratio": 1.0
+    }
+  },
+  {
+    "case": {
+      "id": "CASE_5_UNVERIFIABLE_CONSUMER_HABIT",
+      "name": "The Unverifiable Consumer Habit",
+      "idea": "Social peer accountability app where friends lock up cash deposits that are forfeited if they miss their daily 8-glass water drinking goal.",
+      "region": "global",
+      "expected_failure_mode": "Web search only reveals generic wellness TAM; cannot validate novel behavioral willingness to stake cash.",
+      "ground_truth_inconclusive": true
+    },
+    "baseline": {
+      "case_id": "CASE_5_UNVERIFIABLE_CONSUMER_HABIT",
+      "case_name": "The Unverifiable Consumer Habit",
+      "mode": "Baseline (1-Pass)",
+      "score": 50.0,
+      "status": "Red",
+      "elapsed_sec": 319.4,
+      "rounds_executed": 1,
+      "is_inconclusive": false,
+      "evidence_voids_detected": 0,
+      "evidence_voids": [],
+      "offline_experiments": [],
+      "epistemic_confidence": 0.94,
+      "audit_critique": "",
+      "source_grounding_index": 0.0,
+      "regional_grounding_ratio": 0.0
+    },
+    "adaptive": {
+      "case_id": "CASE_5_UNVERIFIABLE_CONSUMER_HABIT",
+      "case_name": "The Unverifiable Consumer Habit",
+      "mode": "Adaptive (Meta AI Loop)",
+      "score": 50.0,
+      "status": "Field Discovery",
+      "elapsed_sec": 379.54,
+      "rounds_executed": 2,
+      "is_inconclusive": true,
+      "evidence_voids_detected": 8,
+      "evidence_voids": [
+        "Absence of any quantified total addressable market (TAM) for hydration\u2011tracking or accountability apps worldwide or for Trinidad & Tobago specifically.",
+        "No data on average user willingness to lock up cash deposits for health goals, nor typical deposit amounts or conversion rates.",
+        "Missing CAC / CPA benchmarks for peer\u2011to\u2011peer health apps; no cost\u2011per\u2011install or funnel metrics.",
+        "No citation of legal/regulatory frameworks governing escrowed funds, forfeiture penalties, or consumer\u2011protection constraints in the target jurisdictions.",
+        "Lack of any pricing, unit\u2011economic, or margin model (e.g., subscription fee, transaction fee, operating costs).",
+        "No competitor usage statistics (DAU/MAU) to substantiate the claim that existing habit\u2011trackers lack financial accountability.",
+        "No evidence that smart\u2011water\u2011bottle integrations or utility\u2011data APIs are available or adoptable in the cited regions.",
+        "No global or regional data on smartphone penetration, internet connectivity, or app store adoption rates beyond a vague statement."
+      ],
+      "offline_experiments": [
+        "Conduct a small\u2011scale user pilot (n\u2265100) in Port of Spain to measure deposit willingness, default rates, and churn under real financial penalties.",
+        "Run a legal feasibility workshop with a Caribbean financial\u2011services regulator to validate escrow and forfeiture mechanisms."
+      ],
+      "epistemic_confidence": 0.46,
+      "audit_critique": "The dossier is a collage of isolated health statistics for Trinidad & Tobago, with no quantitative grounding for the core venture assumptions (market size, CAC, deposit size, legal feasibility, global demand). It cherry\u2011picks macro health trends, ignores contradictory signals (water scarcity both drives and thwarts hydration incentives), and substitutes regional data for a claimed global market. Founder\u2011centric assertions about peer\u2011financial accountability are never validated by independent usage or financial\u2011services benchmarks.",
+      "source_grounding_index": 0.5,
+      "regional_grounding_ratio": 0.0
+    }
+  }
+]
