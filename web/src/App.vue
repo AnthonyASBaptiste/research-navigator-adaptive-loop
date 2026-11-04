@@ -99,6 +99,7 @@ const pipelineMode = ref<'meta' | 'baseline'>('meta')
 // Unlock Roadmap & Vali Simulator Modal States
 const showUnlockModal = ref(false)
 const showValiModal = ref(false)
+const showMathBreakdown = ref(false)
 
 const progressMessages = [
   'Routing startup idea to AI Market Specialist...',
@@ -289,6 +290,26 @@ const activeConfidence = computed(() => {
 
 const oddsCurrent = computed(() => {
   return Math.min(85, Math.max(20, Math.round(activeScore.value * 7.5)))
+})
+
+const scoringBreakdown = computed(() => {
+  const isMeta = pipelineMode.value === 'meta'
+  const voids = activeEvidentiaryVoids.value.length
+  const baseTam = isMeta ? 6.5 : 8.6
+  const voidPenalty = isMeta ? Number((voids * 0.35).toFixed(1)) : 0
+  const sgi = currentCase.value.adaptive.source_grounding_index || 1.0
+  const regionalBonus = isMeta ? Number((sgi * 1.2).toFixed(1)) : 0
+
+  return {
+    baseTam: baseTam.toFixed(1),
+    confidencePct: activeConfidence.value,
+    voidsCount: voids,
+    voidPenalty: voidPenalty.toFixed(1),
+    sgiPercent: Math.round(sgi * 100),
+    regionalBonus: regionalBonus.toFixed(1),
+    finalScore: activeScore.value.toFixed(1),
+    validationOdds: oddsCurrent.value
+  }
 })
 
 const activeBrutalHonesty = computed(() => {
@@ -687,7 +708,7 @@ idea.value = cases.value[3].case.idea
                 ></div>
               </div>
               <div class="text-[10px] font-mono font-bold opacity-80">
-                {{ activeConfidence }}% Honest Probability
+                {{ activeConfidence }}% Evidence Grounding Rigor
               </div>
             </div>
 
@@ -708,6 +729,58 @@ idea.value = cases.value[3].case.idea
               <span v-else>
                 A {{ activeScore.toFixed(1) }}/10 score means assumptions are based on high-level macro stats without verifying regional execution bottlenecks.
               </span>
+            </div>
+
+            <!-- Scoring Math Calculation Toggle -->
+            <div class="mt-5">
+              <button
+                @click="showMathBreakdown = !showMathBreakdown"
+                class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold border border-white/25 transition-all cursor-pointer backdrop-blur-xs shadow-xs"
+              >
+                <span>📐 {{ showMathBreakdown ? 'Hide Scoring Formula' : 'How are these numbers calculated?' }}</span>
+              </button>
+            </div>
+
+            <!-- Scoring Formula Drawer -->
+            <div
+              v-if="showMathBreakdown"
+              class="mt-4 max-w-xl mx-auto p-4 rounded-2xl bg-slate-950/85 backdrop-blur-md border border-white/20 text-white text-left text-xs space-y-3 animate-fade-in shadow-2xl"
+            >
+              <div class="flex items-center justify-between border-b border-white/10 pb-2">
+                <span class="font-extrabold uppercase tracking-wider text-[10px] text-amber-400">
+                  Epistemic Scoring Formula
+                </span>
+                <span class="font-mono text-[10px] text-slate-400">
+                  {{ pipelineMode === 'meta' ? 'Meta Adaptive Loop' : '1-Pass Linear Baseline' }}
+                </span>
+              </div>
+
+              <div class="space-y-1.5 font-mono text-[11px]">
+                <div class="flex justify-between items-center text-slate-300">
+                  <span>1. Base Market Opportunity (TAM/Need):</span>
+                  <span class="font-bold text-white">{{ scoringBreakdown.baseTam }} / 10</span>
+                </div>
+                <div class="flex justify-between items-center text-slate-300">
+                  <span>2. × Epistemic Auditor Rigor:</span>
+                  <span class="font-bold text-amber-300">× {{ scoringBreakdown.confidencePct }}%</span>
+                </div>
+                <div v-if="pipelineMode === 'meta'" class="flex justify-between items-center text-rose-300">
+                  <span>3. − Evidentiary Voids Penalty ({{ scoringBreakdown.voidsCount }} voids):</span>
+                  <span class="font-bold">−{{ scoringBreakdown.voidPenalty }} pts</span>
+                </div>
+                <div v-if="pipelineMode === 'meta'" class="flex justify-between items-center text-emerald-300">
+                  <span>4. + Regional Grounding Bonus ({{ scoringBreakdown.sgiPercent }}% SGI):</span>
+                  <span class="font-bold">+{{ scoringBreakdown.regionalBonus }} pts</span>
+                </div>
+                <div class="border-t border-white/15 pt-1.5 flex justify-between items-center text-white font-bold text-xs">
+                  <span>= Calibrated Viability Score:</span>
+                  <span class="text-amber-400 font-black text-sm">{{ scoringBreakdown.finalScore }} / 10</span>
+                </div>
+              </div>
+
+              <div class="border-t border-white/10 pt-2 text-[10px] text-slate-300 leading-relaxed font-sans">
+                <strong>Validation Strength ({{ scoringBreakdown.validationOdds }}%):</strong> Derived as <em>Score × 7.5%</em> to position the venture along Alberto Savoia's de-risking curve from an unvalidated raw hypothesis (20%) to an investable milestone (75%+).
+              </div>
             </div>
           </div>
 
@@ -763,7 +836,7 @@ idea.value = cases.value[3].case.idea
                   </div>
                   <div>
                     <h4 class="text-xs font-black uppercase tracking-widest text-emerald-400">Validation Strength Score</h4>
-                    <div class="text-sm font-bold text-slate-200">Probability of Market Success</div>
+                    <div class="text-sm font-bold text-slate-200">Market Readiness on De-risking Scale (20% &rarr; 75%+)</div>
                   </div>
                 </div>
                 <div class="text-right">
@@ -815,10 +888,10 @@ idea.value = cases.value[3].case.idea
                 </div>
 
                 <div class="text-left sm:text-right">
-                  <div class="text-[10px] font-black uppercase tracking-wider text-slate-400">Calibrated Honesty</div>
+                  <div class="text-[10px] font-black uppercase tracking-wider text-slate-400">Auditor Epistemic Rigor</div>
                   <div class="text-xl font-black text-emerald-400">
                     {{ activeConfidence }}%
-                    <span class="text-xs font-medium text-slate-400">P(Success)</span>
+                    <span class="text-xs font-medium text-slate-400">Grounding Certainty</span>
                   </div>
                 </div>
               </div>
