@@ -2,9 +2,13 @@
   "name": "research-navigator-adaptive-loop",
   "version": "1.0.0",
   "private": true,
+  "workspaces": [
+    "web"
+  ],
   "scripts": {
     "dev": "npm --prefix web run dev",
     "build": "npm --prefix web run build",
-    "preview": "npm --prefix web run preview"
+    "preview": "npm --prefix web run preview",
+    "install:all": "npm --prefix web install"
   }
 }

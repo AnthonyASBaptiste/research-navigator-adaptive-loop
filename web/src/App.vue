@@ -72,13 +72,14 @@ interface LiveAssessment {
   is_live: boolean
 }
 
-const API_BASE_URL = 'https://backend-go-412743311224.us-central1.run.app'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://backend-go-412743311224.us-central1.run.app'
 
 const cases = ref<CaseData[]>(rawCases as unknown as CaseData[])
 
 // State
 const idea = ref('')
 const region = ref<'caribbean' | 'global'>('caribbean')
+const executionEngine = ref<'live' | 'replay'>('live')
 const isLoading = ref(false)
 const loadingStep = ref(0)
 const executionTimeSeconds = ref(0)
@@ -135,6 +136,31 @@ const runValidation = async () => {
     else if (executionTimeSeconds.value < 35) loadingStep.value = 4
     else loadingStep.value = 5
   }, 1000)
+
+  // Fast-path: Instant Provenance Replay mode (< 600ms) for rapid evaluation
+  if (executionEngine.value === 'replay') {
+    const fallback = cases.value[selectedCaseIndex.value] || cases.value[0]
+    setTimeout(() => {
+      liveResult.value = {
+        score: fallback.adaptive.score > 10 ? fallback.adaptive.score / 10 : fallback.adaptive.score,
+        status: fallback.adaptive.status,
+        brutal_honesty: fallback.adaptive.audit_critique,
+        indicators: {
+          competition: "Few regional-specific solutions exist; international competitors leave gaps but require localized moats.",
+          market: "Target addressable market provides a focused niche but demands multi-territory expansion to reach venture scale.",
+          urgency: "Compliance friction and manual bottlenecks exist; founders must de-risk by validating active willingness to pay."
+        },
+        judge_confidence: fallback.adaptive.epistemic_confidence,
+        is_live: false,
+        latency_ms: 480
+      }
+      clearInterval(timer)
+      isLoading.value = false
+      hasValidated.value = true
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }, 600)
+    return
+  }
 
   try {
     const res = await fetch(`${API_BASE_URL}/api/assess`, {
@@ -442,6 +468,33 @@ idea.value = cases.value[3].case.idea
                   <strong>Global Mode:</strong> Evaluates for venture-scale TAM, international competitors, and Silicon Valley rubrics.
                 </span>
               </p>
+            </div>
+
+            <!-- Execution Engine Mode Toggle (Self-Contained Live vs Instant Replay) -->
+            <div class="flex items-center justify-between text-xs px-1 pb-1">
+              <span class="text-[11px] font-bold text-slate-600 flex items-center gap-1.5">
+                <Zap class="w-3.5 h-3.5 text-amber-500" />
+                Execution Mode:
+              </span>
+              <div class="inline-flex p-1 bg-slate-100 rounded-xl border border-slate-200">
+                <button
+                  type="button"
+                  @click="executionEngine = 'live'"
+                  class="px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1.5"
+                  :class="executionEngine === 'live' ? 'bg-white text-emerald-800 shadow-2xs font-black' : 'text-slate-500 hover:text-slate-800'"
+                >
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500" :class="executionEngine === 'live' ? 'animate-pulse' : ''"></span>
+                  <span>Live Cloud Run API (~30s)</span>
+                </button>
+                <button
+                  type="button"
+                  @click="executionEngine = 'replay'"
+                  class="px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1.5"
+                  :class="executionEngine === 'replay' ? 'bg-white text-slate-900 shadow-2xs font-black' : 'text-slate-500 hover:text-slate-800'"
+                >
+                  <span>⚡ Instant Replay (&lt;1s)</span>
+                </button>
+              </div>
             </div>
 
             <!-- Textarea -->

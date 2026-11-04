@@ -77,12 +77,22 @@ cp .env.example .env
 python demo.py --live --idea "Cross-border remittance bypassing commercial bank FX queues in Trinidad"
 ```
 
-### 7. Run the Web Showcase Locally
+### 7. Run the Web Showcase Locally (Zero Configuration)
+The frontend is completely self-contained and pre-configured to query our deployed Google Cloud Run demo orchestrator out of the box. No Docker, no PostgreSQL, and no API keys required:
 ```bash
+git clone https://github.com/AnthonyASBaptiste/research-navigator-adaptive-loop.git
+cd research-navigator-adaptive-loop
+
+# 1. Install dependencies (npm workspaces automatically configures web)
 npm install
+
+# 2. Start local interactive showcase
 npm run dev
-# Opens interactive Vite dashboard at http://localhost:5173
+# Opens at http://localhost:5173
 ```
+* **Pre-Configured Demo Backend**: Automatically connects to `https://backend-go-412743311224.us-central1.run.app` (CORS enabled for all localhost origins).
+* **Dual Execution**: Toggle between **Live Cloud Run API (~30s)** for real Tavily + Baseten + Fireworks multi-agent queries, or **Instant Replay (< 1s)** for immediate evaluation.
+* **100% System Independent**: If running offline or behind a strict firewall, the app gracefully falls back to the local calibrated benchmark dataset with zero crashes.
 
 ---
 
