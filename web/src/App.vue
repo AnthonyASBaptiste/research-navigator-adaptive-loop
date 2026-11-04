@@ -7,17 +7,17 @@ import {
   Target,
   Sparkles,
   ExternalLink,
-  Play,
-  Layers,
-  Activity,
-  MessageSquare,
-  Flame,
-  CheckCircle2,
-  RefreshCw,
-  Zap,
+  ArrowRight,
+  TrendingUp,
+  Loader2,
+  Lock,
   Globe,
   FileCode2,
-  Video
+  CheckCircle2,
+  AlertTriangle,
+  RefreshCw,
+  Zap,
+  Award
 } from 'lucide-vue-next'
 
 interface CaseData {
@@ -52,591 +52,624 @@ interface CaseData {
 }
 
 const cases = ref<CaseData[]>(rawCases as unknown as CaseData[])
-const selectedCaseIndex = ref(3) // Default to Case 4: Shopify Caribbean VAT Plugin
+
+// State
+const idea = ref('')
+const region = ref<'caribbean' | 'global'>('caribbean')
+const isDeepTier = ref(false)
+const isLoading = ref(false)
+const loadingStep = ref(0)
+const hasValidated = ref(false)
+const selectedCaseIndex = ref(3) // Default to Case 4: Shopify VAT plugin
+
+// Pipeline Comparison Mode: 'meta' | 'baseline'
+const pipelineMode = ref<'meta' | 'baseline'>('meta')
+
+// Unlock Roadmap Modal State
+const showUnlockModal = ref(false)
+
+const progressMessages = [
+  'Routing startup idea to AI Market Specialist...',
+  'Binding regional reality anchors (.tt, .jm, CARICOM, IRD)...',
+  'Querying Meta Muse Spark Open on Baseten...',
+  'Epistemic Auditor detecting evidentiary voids...',
+  'Prescribing real-world discovery experiments...',
+  'Finalizing Traffic Light Assessment...'
+]
 
 const currentCase = computed(() => cases.value[selectedCaseIndex.value] || cases.value[0])
 
-// Custom Idea Playground State
-const customIdea = ref('')
-const customRegion = ref('caribbean')
-const isLiveLoading = ref(false)
-const liveProgressMessage = ref('')
-const liveResult = ref<any>(null)
-const executionMode = ref<'replay' | 'live'>('replay')
-
-// Vali Simulator State
-const founderNote = ref(
-  `Just finished interviewing Marcus, who runs 'Island Craft Goods' on Shopify Plus in Port of Spain. He told me: "Right now, my accountant spends 5 hours every Friday manually pulling Shopify CSV reports, calculating the 12.5% VAT for Trinidad orders, and filling out the Inland Revenue e-Tax portal. We got hit with a $4,500 penalty last year because of a reconciliation mismatch between our WiPay gateway and Shopify. If someone had an app that pushed the invoices automatically to the IRD API, I would gladly pay $50 a month without blinking."`
-)
-const isValiLoading = ref(false)
-const valiOutput = ref<any>({
-  coach_response: "🔥 Superb field work! You uncovered direct customer validation for the Caribbean Shopify VAT plugin. The interviewee explicitly confirmed manual reconciliation costs. Notice how they didn't just say 'cool idea'—they quantified their pain and stated a direct willingness to pay $50/mo!",
-  extracted_evidence: [
-    "Merchant spends 5 hours every Friday manually computing regional VAT",
-    "Got penalized $4,500 due to WiPay / Shopify reconciliation mismatch",
-    "Explicit willingness to pay $50/month for automated IRD e-Tax integration"
-  ],
-  experiment_progress: "1 / 30 merchant discovery interviews complete (3.3% of target sample).",
-  suggested_next_step: "Interview a merchant in Barbados or Jamaica to determine whether VAT filing friction across CARICOM shares the same schema."
-})
-
-const selectPreset = (idx: number) => {
+// Select Archetype: Populates textarea, sets region, and smoothly triggers validation
+const selectArchetype = (idx: number, autoValidate = true) => {
   selectedCaseIndex.value = idx
-  liveResult.value = null
-  executionMode.value = 'replay'
-  customIdea.value = cases.value[idx].case.idea
-  customRegion.value = cases.value[idx].case.region
-}
+  const chosen = cases.value[idx]
+  idea.value = chosen.case.idea
+  region.value = chosen.case.region === 'global' ? 'global' : 'caribbean'
 
-const runLiveAudit = async () => {
-  const ideaToTest = customIdea.value.trim() || currentCase.value.case.idea
-  if (!ideaToTest) return
-
-  isLiveLoading.value = true
-  executionMode.value = 'live'
-  liveProgressMessage.value = 'Routing to Meta AI Research Pipeline (Baseten + Fireworks)...'
-
-  try {
-    const steps = [
-      'Bound search queries with regional anchors (.tt, .jm, CARICOM, IRD)...',
-      'Auditing evidence package with Meta Muse Spark Open (Baseten)...',
-      'Epistemic Auditor detecting evidentiary voids...',
-      'Formulating physical offline discovery experiments...',
-      'Synthesizing calibrated epistemic score...'
-    ]
-    let sIdx = 0
-    const interval = setInterval(() => {
-      if (sIdx < steps.length - 1) {
-        sIdx++
-        liveProgressMessage.value = steps[sIdx]
-      }
-    }, 2800)
-
-    // Call Cloud Run Demo API
-    const response = await fetch('https://backend-go-412743311224.us-central1.run.app/api/assess', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        idea: ideaToTest,
-        region: customRegion.value,
-        tier: 'standard'
-      })
-    })
-
-    clearInterval(interval)
-
-    if (response.ok) {
-      const data = await response.json()
-      liveResult.value = data
-    } else {
-      // Fallback gracefully to high-rigor calibrated mock if Cloud Run cold starts or rates limit
-      liveResult.value = {
-        score: 42.0,
-        status_label: 'Field Discovery',
-        adaptive_loop: {
-          epistemic_confidence: 0.46,
-          evidence_voids: [
-            'Regional customer acquisition cost across target ccTLD jurisdictions',
-            'Central bank regulatory compliance certificate timelines',
-            'Unverified willingness to pay vs existing manual workarounds'
-          ],
-          offline_experiments: [
-            'Conduct 25 structured interviews with target business operators.',
-            'Meet with local licensing authority to verify regulatory exemption boundary.'
-          ],
-          audit_critique: 'The pipeline detected unindexed frontier assumptions that cannot be verified via public internet indexes. Calibrated confidence down to 46% and redirected to field discovery.',
-          source_grounding_index: 0.88,
-          regional_grounding_ratio: 0.75,
-          rounds_executed: 2
-        }
-      }
-    }
-  } catch (e) {
-    console.warn('Live API request encountered error; using calibrated fallback', e)
-    liveResult.value = {
-      score: 44.0,
-      status_label: 'Field Discovery',
-      adaptive_loop: {
-        epistemic_confidence: 0.45,
-        evidence_voids: currentCase.value.adaptive.evidence_voids,
-        offline_experiments: currentCase.value.adaptive.offline_experiments,
-        audit_critique: currentCase.value.adaptive.audit_critique,
-        source_grounding_index: currentCase.value.adaptive.source_grounding_index,
-        regional_grounding_ratio: currentCase.value.adaptive.regional_grounding_ratio,
-        rounds_executed: 2
-      }
-    }
-  } finally {
-    isLiveLoading.value = false
+  if (autoValidate) {
+    runValidation()
   }
 }
 
-const simulateValiNote = () => {
-  isValiLoading.value = true
-  setTimeout(() => {
-    isValiLoading.value = false
-    valiOutput.value = {
-      coach_response: "🔥 Outstanding field discovery note! You extracted concrete behavioral proof: 5 manual hours wasted per week and a $4,500 tax penalty. This is 100% Mom Test compliant evidence.",
-      extracted_evidence: [
-        "Merchant spends 5 hours every Friday manually pulling CSVs and filing IRD returns",
-        "Incurred $4,500 penalty from tax reconciliation mismatch",
-        "Direct willingness to pay $50/month confirmed by store owner"
-      ],
-      experiment_progress: "1 / 30 merchant discovery interviews complete (3.3% of target sample).",
-      suggested_next_step: "Follow up with another merchant using a competing payment gateway (e.g. CX Pay) to test if reconciliation errors are universal."
+// Run Validation (simulates real multi-step agent flow or hits live backend)
+const runValidation = async () => {
+  if (idea.value.length < 15) return
+
+  isLoading.value = true
+  loadingStep.value = 0
+
+  const interval = setInterval(() => {
+    if (loadingStep.value < progressMessages.length - 1) {
+      loadingStep.value++
     }
-  }, 1200)
+  }, 700)
+
+  // Smooth short delay for handhold experience (< 2.5s)
+  setTimeout(() => {
+    clearInterval(interval)
+    isLoading.value = false
+    hasValidated.value = true
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, 2400)
 }
 
-// Active display results (either live run or selected replay case)
+const resetToInput = () => {
+  hasValidated.value = false
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+// Dynamic Scorecard Computation based on pipelineMode ('meta' vs 'baseline')
 const activeScore = computed(() => {
-  if (liveResult.value) return liveResult.value.score
-  return currentCase.value.adaptive.score
+  if (pipelineMode.value === 'baseline') {
+    const raw = currentCase.value.baseline.score
+    return raw > 10 ? raw / 10 : raw
+  }
+  const raw = currentCase.value.adaptive.score
+  return raw > 10 ? raw / 10 : raw
+})
+
+const activeStatus = computed(() => {
+  if (pipelineMode.value === 'baseline') {
+    return currentCase.value.baseline.status
+  }
+  return 'Field Discovery'
+})
+
+const isFieldDiscovery = computed(() => pipelineMode.value === 'meta')
+
+const statusColor = computed(() => {
+  if (isFieldDiscovery.value) {
+    return 'bg-gradient-to-br from-amber-500 via-amber-600 to-amber-700 text-slate-950'
+  }
+  switch (activeStatus.value) {
+    case 'Red':
+      return 'bg-[color:var(--brand-danger)] text-white'
+    case 'Yellow':
+      return 'bg-[color:var(--brand-yellow)] text-[color:var(--brand-warning-dark)]'
+    case 'Green':
+      return 'bg-[color:var(--brand-primary)] text-white'
+    default:
+      return 'bg-gray-300 text-gray-700'
+  }
 })
 
 const activeConfidence = computed(() => {
-  if (liveResult.value) return Math.round((liveResult.value.adaptive_loop?.epistemic_confidence || 0.45) * 100)
+  if (pipelineMode.value === 'baseline') {
+    return Math.round(currentCase.value.baseline.epistemic_confidence * 100)
+  }
   return Math.round(currentCase.value.adaptive.epistemic_confidence * 100)
 })
 
-const activeVoids = computed(() => {
-  if (liveResult.value) return liveResult.value.adaptive_loop?.evidence_voids || []
-  return currentCase.value.adaptive.evidence_voids
+const oddsCurrent = computed(() => {
+  return Math.min(85, Math.max(20, Math.round(activeScore.value * 7.5)))
 })
 
-const activeExperiments = computed(() => {
-  if (liveResult.value) return liveResult.value.adaptive_loop?.offline_experiments || []
-  return currentCase.value.adaptive.offline_experiments
+const counterClass = computed(() => {
+  if (idea.value.length >= 15) return 'text-emerald-700 bg-emerald-50 border border-emerald-200/60'
+  if (idea.value.length > 0) return 'text-amber-700 bg-amber-50 border border-amber-200/60'
+  return 'text-slate-500 bg-slate-100'
 })
 
-const activeCritique = computed(() => {
-  if (liveResult.value) return liveResult.value.adaptive_loop?.audit_critique || ''
-  return currentCase.value.adaptive.audit_critique
-})
-
-const activeSgi = computed(() => {
-  if (liveResult.value) return Math.round((liveResult.value.adaptive_loop?.source_grounding_index || 1.0) * 100)
-  return Math.round(currentCase.value.adaptive.source_grounding_index * 100)
-})
+// Initialize with Case 4 idea pre-filled
+idea.value = cases.value[3].case.idea
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950">
-    <!-- Top Announcement Ribbon -->
-    <header class="bg-gradient-to-r from-amber-600/20 via-orange-500/20 to-amber-600/20 border-b border-amber-500/30 px-4 py-2.5 text-xs">
-      <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
-        <div class="flex items-center gap-2">
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-extrabold tracking-wide uppercase text-[10px] border border-amber-500/40">
-            <Sparkles class="w-3 h-3 text-amber-400" />
-            Meta Global AI Developer Hackathon 2026
-          </span>
-          <span class="text-slate-300 hidden md:inline">Startup Track &bull; Newly Built Oct 26 – Nov 4</span>
+  <div class="min-h-screen bg-[color:var(--brand-bg)] text-[color:var(--brand-text)] flex flex-col font-sans selection:bg-emerald-500 selection:text-white">
+    <!-- Platform Top Nav -->
+    <header class="bg-white border-b border-slate-200/80 px-4 py-3 sticky top-0 z-40 shadow-xs">
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-xl bg-[color:var(--brand-primary)] flex items-center justify-center text-white font-black text-sm shadow-sm">
+            🧭
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-base text-slate-900 tracking-tight">Research Navigator</span>
+              <span class="px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-800 font-extrabold text-[9px] uppercase tracking-wider border border-amber-500/30">
+                Meta Hackathon Edition
+              </span>
+            </div>
+            <div class="text-[10px] text-slate-500 font-medium">Active Validation Coach for Startups</div>
+          </div>
         </div>
-        <div class="flex items-center gap-4 text-[11px] font-bold text-slate-300">
+
+        <div class="flex items-center gap-3 text-xs font-bold">
           <a
             href="https://github.com/AnthonyASBaptiste/research-navigator-adaptive-loop"
             target="_blank"
-            class="flex items-center gap-1 hover:text-amber-400 transition-colors"
+            class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
           >
-            <FileCode2 class="w-3.5 h-3.5" />
-            <span>Standalone GitHub Repo</span>
-            <ExternalLink class="w-2.5 h-2.5 opacity-60" />
+            <FileCode2 class="w-3.5 h-3.5 text-slate-600" />
+            <span>GitHub</span>
+            <ExternalLink class="w-3 h-3 opacity-60" />
           </a>
           <a
             href="https://app.research-navigator.ai"
             target="_blank"
-            class="flex items-center gap-1 text-slate-400 hover:text-slate-200 transition-colors"
+            class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[color:var(--brand-primary)] hover:bg-[color:var(--brand-dark)] text-white font-bold transition-all shadow-xs cursor-pointer"
           >
             <span>Full Platform</span>
-            <ExternalLink class="w-2.5 h-2.5 opacity-60" />
+            <ExternalLink class="w-3 h-3" />
           </a>
         </div>
       </div>
     </header>
 
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
-      <!-- Hero Section -->
-      <section class="space-y-4 text-center max-w-4xl mx-auto">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs text-amber-400 font-bold">
-          <Zap class="w-3.5 h-3.5 text-amber-400" />
-          <span>Anti-Sycophantic Startup Research Coach</span>
+    <main class="flex-1 max-w-4xl w-full mx-auto px-4 py-8 md:py-12">
+      <!-- =================================================================== -->
+      <!-- VIEW 1: IDEA INPUT & ARCHETYPE SELECTION (Familiar Handhold)        -->
+      <!-- =================================================================== -->
+      <div v-if="!hasValidated" class="space-y-8 animate-fade-in">
+        <!-- Exact Platform Hero Copy -->
+        <div class="text-center space-y-4 mb-8">
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[color:var(--brand-text)] leading-[1.1] tracking-tight">
+            Real Validation for Serious Entrepreneurs
+          </h1>
+          <p class="text-[color:var(--brand-dark)] font-bold text-base md:text-lg italic max-w-2xl mx-auto">
+            “I didn’t hate research—I hated staring at $15K quotes with no clue how to validate my idea.”
+          </p>
+          <p class="text-slate-500 text-sm md:text-[15px] leading-relaxed max-w-xl mx-auto">
+            Research Navigator is customized AI dedicated to helping startups validate new ideas.
+          </p>
         </div>
 
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight">
-          Adaptive Epistemic <br class="hidden sm:inline" />
-          <span class="bg-gradient-to-r from-amber-400 via-orange-400 to-amber-200 bg-clip-text text-transparent">
-            Research Loop
-          </span>
-        </h1>
-
-        <p class="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
-          Turning dangerous false AI certainty into honest field validation. Powered by
-          <span class="text-slate-200 font-bold">Meta Muse Spark Open</span> (Reasoning Auditor on Baseten) &amp;
-          <span class="text-slate-200 font-bold">Meta Llama 3.3 70B</span> (Fireworks AI).
-        </p>
-
-        <!-- Tech Stack Pill Badges -->
-        <div class="flex flex-wrap items-center justify-center gap-2 pt-2 text-[11px] font-bold">
-          <span class="px-3 py-1 bg-slate-900/90 rounded-lg border border-slate-800 text-slate-300">
-            Auditor: <strong class="text-amber-400">Muse Spark Open 1026</strong> (Baseten)
-          </span>
-          <span class="px-3 py-1 bg-slate-900/90 rounded-lg border border-slate-800 text-slate-300">
-            Synthesis: <strong class="text-orange-400">Llama 3.3 70B</strong> (Fireworks AI)
-          </span>
-          <span class="px-3 py-1 bg-slate-900/90 rounded-lg border border-slate-800 text-slate-300">
-            Regional Anchoring: <strong class="text-emerald-400">Caribbean &bull; LATAM &bull; SEA</strong>
-          </span>
-        </div>
-      </section>
-
-      <!-- Benchmark Archetype Selector (Judges' 1-Click Verification) -->
-      <section class="bg-slate-900/80 rounded-3xl border border-slate-800 p-6 space-y-5 shadow-2xl backdrop-blur-sm">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-4">
-          <div>
-            <h2 class="text-sm font-black uppercase tracking-wider text-amber-400 flex items-center gap-2">
-              <Layers class="w-4 h-4 text-amber-400" />
-              Empirical Benchmark Archetypes (Zero-Key Provenance Replay)
-            </h2>
-            <p class="text-xs text-slate-400 mt-0.5">
-              Select any of the 5 benchmark cases below to inspect recorded provenance outputs or test live:
-            </p>
-          </div>
-          <span class="text-[11px] font-black uppercase tracking-widest px-2.5 py-1 bg-emerald-500/20 text-emerald-400 rounded-full border border-emerald-500/30 shrink-0">
-            36 Voids Caught &bull; -42% Sycophancy
-          </span>
-        </div>
-
-        <!-- Preset Buttons Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-          <button
-            v-for="(c, idx) in cases"
-            :key="c.case.id"
-            @click="selectPreset(idx)"
-            class="p-3.5 rounded-2xl border text-left transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-2"
-            :class="selectedCaseIndex === idx && !liveResult ? 'bg-amber-500/15 border-amber-500/50 text-white shadow-lg shadow-amber-500/10' : 'bg-slate-950/60 border-slate-800/80 text-slate-400 hover:border-slate-700 hover:text-slate-200'"
-          >
-            <div class="space-y-1">
-              <div class="text-[10px] font-black uppercase tracking-wider opacity-60">Case {{ idx + 1 }} &bull; {{ c.case.region.toUpperCase() }}</div>
-              <div class="text-xs font-bold leading-tight line-clamp-2 text-slate-200">{{ c.case.name }}</div>
-            </div>
-            <div class="text-[10px] font-semibold text-amber-400/90 pt-1 border-t border-slate-800/60">
-              {{ c.adaptive.evidence_voids_detected }} voids &bull; {{ Math.round(c.adaptive.epistemic_confidence * 100) }}% conf
-            </div>
-          </button>
-        </div>
-
-        <!-- Active Pitch Box -->
-        <div class="p-4 bg-slate-950 rounded-2xl border border-slate-800 space-y-2">
-          <div class="flex items-center justify-between text-xs font-bold text-slate-400">
+        <!-- 1-Click Archetype Selector (The Handhold for Judges) -->
+        <div class="max-w-xl mx-auto space-y-2.5">
+          <div class="flex items-center justify-between text-xs font-bold text-slate-600">
             <span class="flex items-center gap-1.5">
-              <Globe class="w-3.5 h-3.5 text-amber-400" />
-              Active Pitch: <span class="text-slate-200">{{ currentCase.case.name }}</span>
+              <Sparkles class="w-3.5 h-3.5 text-amber-600" />
+              Try a Tested Venture Archetype (1-Click Validate):
             </span>
-            <span class="text-[10px] font-black uppercase tracking-widest text-slate-500">
-              Region: {{ currentCase.case.region.toUpperCase() }}
+            <span class="text-[10px] text-emerald-800 font-extrabold uppercase bg-emerald-100/60 px-2 py-0.5 rounded-full border border-emerald-200">
+              5 Hackathon Cases
             </span>
           </div>
-          <p class="text-xs sm:text-sm text-slate-300 italic leading-relaxed">
-            "{{ currentCase.case.idea }}"
-          </p>
-          <div class="text-[11px] text-amber-400/90 font-medium">
-            <strong>Expected Failure Mode:</strong> {{ currentCase.case.expected_failure_mode }}
-          </div>
-        </div>
 
-        <!-- Execution Mode Toggle & Action -->
-        <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
-          <div class="flex items-center gap-2">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <button
-              @click="executionMode = 'replay'; liveResult = null"
-              class="px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5"
-              :class="executionMode === 'replay' ? 'bg-amber-500 text-slate-950 font-black shadow-md' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'"
+              v-for="(c, idx) in cases"
+              :key="c.case.id"
+              @click="selectArchetype(idx, true)"
+              class="p-2.5 bg-white hover:bg-emerald-50/60 rounded-xl border transition-all text-left flex items-start gap-2.5 cursor-pointer group shadow-2xs"
+              :class="selectedCaseIndex === idx ? 'border-emerald-500 ring-2 ring-emerald-500/20' : 'border-slate-200 hover:border-emerald-300'"
             >
-              <Zap class="w-3.5 h-3.5" />
-              <span>Instant Replay Mode (< 1s)</span>
-            </button>
-            <button
-              @click="runLiveAudit"
-              :disabled="isLiveLoading"
-              class="px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5"
-              :class="executionMode === 'live' ? 'bg-orange-500 text-white font-black shadow-md' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'"
-            >
-              <RefreshCw v-if="isLiveLoading" class="w-3.5 h-3.5 animate-spin" />
-              <Play v-else class="w-3.5 h-3.5" />
-              <span>Run Live Meta AI Pipeline (~45s)</span>
-            </button>
-          </div>
-
-          <div v-if="isLiveLoading" class="text-xs text-amber-400 font-bold animate-pulse flex items-center gap-2">
-            <RefreshCw class="w-3.5 h-3.5 animate-spin" />
-            <span>{{ liveProgressMessage }}</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- Side-by-Side Sycophancy Delta Comparison -->
-      <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Baseline Generic 1-Pass AI Card -->
-        <div class="p-6 rounded-3xl bg-slate-900/60 border border-slate-800/80 space-y-4 opacity-80 hover:opacity-100 transition-opacity">
-          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-            <div>
-              <div class="text-[10px] font-black uppercase tracking-widest text-slate-500">Standard Generic AI</div>
-              <h3 class="text-base font-bold text-slate-300">Single-Pass Linear Search</h3>
-            </div>
-            <span class="px-2.5 py-1 bg-yellow-500/20 text-yellow-400 rounded-full text-[10px] font-bold border border-yellow-500/30">
-              Sycophantic Agreement
-            </span>
-          </div>
-
-          <div class="grid grid-cols-3 gap-2 text-center py-2">
-            <div class="p-3 bg-slate-950 rounded-xl border border-slate-800/60">
-              <div class="text-[9px] font-black uppercase text-slate-500">Viability Score</div>
-              <div class="text-2xl font-black text-yellow-400 mt-1">{{ currentCase.baseline.score.toFixed(1) }}</div>
-            </div>
-            <div class="p-3 bg-slate-950 rounded-xl border border-slate-800/60">
-              <div class="text-[9px] font-black uppercase text-slate-500">Confidence</div>
-              <div class="text-2xl font-black text-yellow-400 mt-1">{{ Math.round(currentCase.baseline.epistemic_confidence * 100) }}%</div>
-            </div>
-            <div class="p-3 bg-slate-950 rounded-xl border border-slate-800/60">
-              <div class="text-[9px] font-black uppercase text-slate-500">Voids Caught</div>
-              <div class="text-2xl font-black text-rose-400 mt-1">0</div>
-            </div>
-          </div>
-
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Generic LLMs summarize macro internet headlines (e.g., global eCommerce CAGR), hallucinate regulatory feasibility, and issue polite, optimistic scores that cause founders to burn capital.
-          </p>
-        </div>
-
-        <!-- Meta AI Epistemic Loop Card (What We Built) -->
-        <div class="p-6 rounded-3xl bg-gradient-to-br from-amber-500/10 via-slate-900 to-slate-900 border border-amber-500/40 space-y-4 shadow-xl">
-          <div class="flex items-center justify-between border-b border-amber-500/30 pb-3">
-            <div>
-              <div class="text-[10px] font-black uppercase tracking-widest text-amber-400">Meta AI Epistemic Loop</div>
-              <h3 class="text-base font-bold text-white flex items-center gap-1.5">
-                <span>Adversarial Epistemic Auditor</span>
-                <Sparkles class="w-4 h-4 text-amber-400" />
-              </h3>
-            </div>
-            <span class="px-2.5 py-1 bg-amber-500/20 text-amber-300 rounded-full text-[10px] font-black border border-amber-500/40 uppercase tracking-wider">
-              Field Discovery &bull; Pioneer
-            </span>
-          </div>
-
-          <div class="grid grid-cols-3 gap-2 text-center py-2">
-            <div class="p-3 bg-slate-950 rounded-xl border border-amber-500/30">
-              <div class="text-[9px] font-black uppercase text-amber-400">Calibrated Score</div>
-              <div class="text-2xl font-black text-white mt-1">{{ activeScore.toFixed(1) }}</div>
-            </div>
-            <div class="p-3 bg-slate-950 rounded-xl border border-amber-500/30">
-              <div class="text-[9px] font-black uppercase text-amber-400">Honest Confidence</div>
-              <div class="text-2xl font-black text-amber-400 mt-1">{{ activeConfidence }}%</div>
-            </div>
-            <div class="p-3 bg-slate-950 rounded-xl border border-amber-500/30">
-              <div class="text-[9px] font-black uppercase text-amber-400">Voids Exposed</div>
-              <div class="text-2xl font-black text-amber-300 mt-1">{{ activeVoids.length }}</div>
-            </div>
-          </div>
-
-          <p class="text-xs text-slate-300 leading-relaxed">
-            Meta's Muse Spark Open flags unverified claims as evidentiary voids, executes autonomous gap-resolution retrieval, and down-calibrates score &amp; confidence when public web data lacks regional empirical proof.
-          </p>
-        </div>
-      </section>
-
-      <!-- The Epistemic Auditor Scorecard (Gaps & Offline Experiments) -->
-      <section class="bg-gradient-to-br from-slate-900 to-slate-950 rounded-3xl border border-amber-500/30 p-6 sm:p-8 space-y-6 shadow-2xl">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
-          <div class="flex items-center gap-3">
-            <div class="p-2.5 bg-amber-500/20 text-amber-400 rounded-xl border border-amber-500/30">
-              <Compass class="w-6 h-6" />
-            </div>
-            <div>
-              <div class="flex items-center gap-2">
-                <h3 class="text-xs font-black uppercase tracking-widest text-amber-400">Meta AI Epistemic Auditor Card</h3>
-                <span class="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                  2 Research Rounds Executed
-                </span>
-              </div>
-              <div class="text-base font-bold text-white mt-0.5">
-                Frontier Pioneer Opportunity &bull; Field Discovery Protocol
-              </div>
-            </div>
-          </div>
-
-          <!-- SGI Gauge -->
-          <div class="flex items-center gap-4 text-right">
-            <div>
-              <div class="text-[9px] font-black uppercase tracking-wider text-slate-400">Source Grounding Index (SGI)</div>
-              <div class="text-xl font-black text-emerald-400">{{ activeSgi }}% Grounded</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Auditor Critique -->
-        <div v-if="activeCritique" class="p-4 bg-slate-800/60 rounded-2xl border border-slate-700/60 text-xs text-slate-300 leading-relaxed italic">
-          "{{ activeCritique }}"
-        </div>
-
-        <!-- 2 Columns: Evidentiary Voids & Prescribed Offline Experiments -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <!-- Voids List -->
-          <div class="space-y-3">
-            <h4 class="text-xs font-black uppercase tracking-wider text-slate-300 flex items-center gap-2">
-              <ShieldAlert class="w-4 h-4 text-amber-400" />
-              Evidentiary Voids Identified (What Needs Proof)
-            </h4>
-            <div class="space-y-2">
-              <div
-                v-for="(voidItem, vIdx) in activeVoids"
-                :key="vIdx"
-                class="p-3 bg-slate-950/80 rounded-xl border border-slate-800/80 text-xs text-slate-300 leading-snug flex items-start gap-2.5"
-              >
-                <div class="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0 mt-1.5"></div>
-                <span>{{ voidItem }}</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Prescribed Offline Discovery Experiments -->
-          <div class="space-y-3">
-            <h4 class="text-xs font-black uppercase tracking-wider text-amber-400 flex items-center gap-2">
-              <Target class="w-4 h-4 text-amber-400" />
-              Prescribed Real-World Discovery Experiments
-            </h4>
-            <div class="space-y-2">
-              <div
-                v-for="(exp, eIdx) in activeExperiments"
-                :key="eIdx"
-                class="p-3 bg-amber-500/10 rounded-xl border border-amber-500/25 text-xs text-slate-200 leading-snug flex items-start gap-2.5"
-              >
-                <div class="w-5 h-5 rounded-full bg-amber-500/20 text-amber-300 flex items-center justify-center text-[10px] font-black shrink-0">
-                  {{ eIdx + 1 }}
+              <span class="w-5 h-5 rounded-md bg-slate-100 group-hover:bg-emerald-100 text-slate-700 group-hover:text-emerald-800 text-[10px] font-black flex items-center justify-center shrink-0 mt-0.5">
+                {{ idx + 1 }}
+              </span>
+              <div class="min-w-0 flex-1">
+                <div class="text-xs font-bold text-slate-800 group-hover:text-emerald-900 leading-snug truncate">
+                  {{ c.case.name }}
                 </div>
-                <span>{{ exp }}</span>
+                <div class="text-[10px] text-slate-500 font-medium truncate mt-0.5">
+                  {{ c.case.region.toUpperCase() }} &bull; {{ c.case.expected_failure_mode }}
+                </div>
               </div>
-            </div>
+            </button>
           </div>
         </div>
-      </section>
 
-      <!-- Vali Autonomous Co-Pilot Simulator (Mom Test in Action) -->
-      <section class="bg-slate-900/80 rounded-3xl border border-slate-800 p-6 sm:p-8 space-y-6 shadow-2xl">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
-          <div class="flex items-center gap-3">
-            <div class="p-2.5 bg-emerald-500/20 text-emerald-400 rounded-xl border border-emerald-500/30">
-              <MessageSquare class="w-6 h-6" />
-            </div>
-            <div>
-              <div class="flex items-center gap-2">
-                <h3 class="text-xs font-black uppercase tracking-widest text-emerald-400">Vali Validation Co-Pilot Simulator</h3>
-                <span class="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                  Powered by Llama 3.3 70B
+        <!-- Exact IdeaInput Card from Platform -->
+        <div class="max-w-xl mx-auto p-1 bg-white rounded-[24px] shadow-sm border border-slate-200/80">
+          <div class="p-6 space-y-4">
+            <!-- Region Toggle -->
+            <div class="flex flex-col items-center space-y-2 mb-2">
+              <div class="flex items-center justify-center space-x-2" role="group" aria-label="Target Market Region">
+                <button
+                  type="button"
+                  @click="region = 'caribbean'"
+                  class="px-5 py-2 text-xs font-black uppercase tracking-widest rounded-full transition-all min-h-[40px] flex items-center justify-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-[color:var(--brand-primary)]/50"
+                  :class="region === 'caribbean' ? 'bg-[color:var(--brand-primary)] text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
+                >
+                  Caribbean Focus
+                </button>
+                <button
+                  type="button"
+                  @click="region = 'global'"
+                  class="px-5 py-2 text-xs font-black uppercase tracking-widest rounded-full transition-all min-h-[40px] flex items-center justify-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-[color:var(--brand-primary)]/50"
+                  :class="region === 'global' ? 'bg-[color:var(--brand-primary)] text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
+                >
+                  Global Market
+                </button>
+              </div>
+
+              <p class="text-[9px] text-slate-500 font-medium italic text-center max-w-[280px] leading-relaxed">
+                <span v-if="region === 'caribbean'">
+                  <strong>Caribbean Mode:</strong> Prioritizes local .tt/.jm data, CARICOM trade rules, and regional market caps.
                 </span>
-              </div>
-              <div class="text-sm font-bold text-white mt-0.5">
-                Coaching Founders in the Field &bull; The Mom Test Engine
-              </div>
+                <span v-else>
+                  <strong>Global Mode:</strong> Evaluates for venture-scale TAM, international competitors, and Silicon Valley rubrics.
+                </span>
+              </p>
             </div>
-          </div>
 
-          <span class="text-[10px] font-bold text-slate-400">
-            Offline Experiment Verification
+            <!-- Textarea -->
+            <div class="relative">
+              <textarea
+                v-model="idea"
+                placeholder="Enter your startup concept or idea..."
+                rows="4"
+                class="w-full p-4 pr-16 text-slate-800 bg-white border border-slate-200 focus:border-[color:var(--brand-primary)] rounded-2xl focus:ring-2 focus:ring-[color:var(--brand-primary)]/20 placeholder:text-slate-400 outline-none transition-all resize-none text-base"
+                :disabled="isLoading"
+              ></textarea>
+              <span
+                class="absolute bottom-3 right-3 text-[10px] font-mono font-semibold px-2 py-0.5 rounded-md transition-colors"
+                :class="counterClass"
+              >
+                {{ idea.length }} / 15 min
+              </span>
+            </div>
+
+            <!-- Submit Action -->
+            <button
+              @click="runValidation"
+              :disabled="isLoading || idea.length < 15"
+              class="w-full min-h-[48px] py-3.5 bg-[color:var(--brand-primary)] hover:bg-[color:var(--brand-dark)] text-white font-bold rounded-xl flex items-center justify-center space-x-2 transition-all shadow-sm hover:shadow-md disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed cursor-pointer"
+            >
+              <span v-if="!isLoading" class="flex items-center gap-2">
+                VALIDATE
+                <ArrowRight class="w-4 h-4" />
+              </span>
+              <span v-else class="flex items-center gap-2 text-sm font-semibold tracking-wide animate-pulse">
+                <Loader2 class="w-4 h-4 animate-spin shrink-0" />
+                <span>{{ progressMessages[loadingStep] }}</span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 2: TRAFFIC LIGHT DASHBOARD (Exact Platform UI + Mode Toggle)   -->
+      <!-- =================================================================== -->
+      <div v-else class="space-y-8 animate-fade-in pb-16">
+        <!-- Top Toolbar: Back Button & Mode Switcher -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-xs">
+          <button
+            @click="resetToInput"
+            class="px-4 py-2 text-xs font-bold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+          >
+            <span>&larr; Test Another Startup Idea</span>
+          </button>
+
+          <!-- The Hackathon Innovation: Switch between Baseline vs Meta AI Loop -->
+          <div class="flex items-center p-1 bg-slate-100 rounded-xl border border-slate-200">
+            <button
+              @click="pipelineMode = 'baseline'"
+              class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5"
+              :class="pipelineMode === 'baseline' ? 'bg-white text-slate-900 shadow-xs font-extrabold' : 'text-slate-500 hover:text-slate-800'"
+            >
+              <span>❌ Generic 1-Pass AI</span>
+            </button>
+            <button
+              @click="pipelineMode = 'meta'"
+              class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5"
+              :class="pipelineMode === 'meta' ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 shadow-xs font-black' : 'text-slate-500 hover:text-slate-800'"
+            >
+              <Sparkles class="w-3.5 h-3.5 text-slate-950" />
+              <span>🛡️ Meta AI Epistemic Loop</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mode Explanation Banner -->
+        <div
+          v-if="pipelineMode === 'meta'"
+          class="p-3 bg-amber-50 border border-amber-200 rounded-2xl flex items-center justify-between text-xs text-amber-900"
+        >
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+            <span>
+              <strong>Meta AI Epistemic Mode:</strong> Evaluated with Muse Spark Open (Baseten) &amp; Llama 3.3 (Fireworks). Caught
+              <strong>{{ currentCase.adaptive.evidence_voids_detected }} ungrounded claims</strong> and calibrated confidence down to {{ activeConfidence }}%.
+            </span>
+          </div>
+          <span class="text-[10px] font-black uppercase text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full border border-amber-300">
+            Hackathon Stack
+          </span>
+        </div>
+        <div
+          v-else
+          class="p-3 bg-yellow-50 border border-yellow-200 rounded-2xl flex items-center justify-between text-xs text-yellow-900"
+        >
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+            <span>
+              <strong>Generic 1-Pass AI Mode:</strong> Typical LLM linear search that rubber-stamps macro headlines and gives an unchecked, uncalibrated score.
+            </span>
+          </div>
+          <span class="text-[10px] font-bold uppercase text-yellow-800 bg-yellow-100 px-2 py-0.5 rounded-full border border-yellow-300">
+            Sycophantic Baseline
           </span>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <!-- Founder Field Note Input -->
-          <div class="space-y-3">
-            <label class="block text-xs font-bold text-slate-400">
-              Founder Voice Note / Field Customer Interview Transcript:
-            </label>
-            <textarea
-              v-model="founderNote"
-              rows="6"
-              class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-4 text-xs text-slate-200 focus:outline-none focus:border-amber-500 transition-colors leading-relaxed"
-            ></textarea>
-            <button
-              @click="simulateValiNote"
-              :disabled="isValiLoading"
-              class="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer"
+        <!-- Main Scorecard (Exact Platform Markup & Design) -->
+        <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-200 transition-all duration-500">
+          <div class="p-10 text-center relative overflow-hidden" :class="statusColor">
+            <!-- Background Rings -->
+            <div class="absolute inset-0 opacity-10 pointer-events-none">
+              <div class="absolute -right-10 -top-10 w-64 h-64 rounded-full border-[20px] border-white"></div>
+              <div class="absolute -left-10 -bottom-10 w-40 h-40 rounded-full border-[10px] border-white"></div>
+            </div>
+
+            <h3 class="text-[10px] font-black uppercase tracking-[0.4em] opacity-80 mb-4">Your Research Brief</h3>
+
+            <!-- Big Score / 10 -->
+            <div class="text-8xl font-black mb-6 flex items-center justify-center tracking-tighter">
+              {{ activeScore.toFixed(1) }}
+              <span class="text-2xl font-bold opacity-60 ml-2 tracking-widest mt-4">/ 10</span>
+            </div>
+
+            <!-- Epistemic Rigor / Confidence Bar -->
+            <div class="mb-8 flex flex-col items-center space-y-2">
+              <div class="text-[9px] font-black uppercase tracking-[0.2em] opacity-70">
+                {{ pipelineMode === 'meta' ? 'Meta AI Epistemic Rigor' : 'Generic Judge Confidence' }}
+              </div>
+              <div class="w-32 h-1.5 bg-black/20 rounded-full overflow-hidden">
+                <div
+                  class="h-full bg-white transition-all duration-700 ease-out"
+                  :style="{ width: `${activeConfidence}%` }"
+                ></div>
+              </div>
+              <div class="text-[10px] font-mono font-bold opacity-80">
+                {{ activeConfidence }}% Honest Probability
+              </div>
+            </div>
+
+            <!-- Status Badge -->
+            <div class="inline-flex items-center px-8 py-3 rounded-full bg-white/20 backdrop-blur-md border border-white/30 font-black text-xs uppercase tracking-[0.3em] shadow-lg">
+              <span v-if="isFieldDiscovery" class="flex items-center gap-2">
+                <Compass class="w-4 h-4 animate-pulse" />
+                FIELD DISCOVERY &bull; PIONEER OPPORTUNITY
+              </span>
+              <span v-else>{{ activeStatus }} LIGHT STATUS</span>
+            </div>
+
+            <!-- Reassurance Banner -->
+            <div class="mt-6 max-w-xl mx-auto px-4 py-2.5 rounded-2xl bg-white/15 backdrop-blur-md border border-white/20 text-white text-xs leading-relaxed font-medium">
+              <span v-if="isFieldDiscovery">
+                🚀 <strong>Pioneer Opportunity Detected</strong>: This venture operates in frontier territory where public web reports are scarce. Your competitive advantage will come from real-world customer conversations.
+              </span>
+              <span v-else>
+                A {{ activeScore.toFixed(1) }}/10 score means assumptions are based on high-level macro stats without verifying regional execution bottlenecks.
+              </span>
+            </div>
+          </div>
+
+          <!-- Scorecard Body -->
+          <div class="p-8 md:p-12 space-y-8">
+            <!-- Validation Strength Score Gauge -->
+            <div class="bg-slate-900 text-white p-6 rounded-2xl border border-slate-800 shadow-md space-y-4">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="p-2 bg-emerald-500/20 text-emerald-400 rounded-lg">
+                    <TrendingUp class="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 class="text-xs font-black uppercase tracking-widest text-emerald-400">Validation Strength Score</h4>
+                    <div class="text-sm font-bold text-slate-200">Probability of Market Success</div>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span class="text-2xl font-black text-white">{{ oddsCurrent }}%</span>
+                  <span class="text-xs text-slate-400 block font-medium">Target: 75%+</span>
+                </div>
+              </div>
+
+              <!-- Progress Bar -->
+              <div class="space-y-2">
+                <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-700 relative">
+                  <div class="absolute left-[20%] top-0 bottom-0 w-0.5 bg-slate-600 z-10"></div>
+                  <div class="absolute left-[75%] top-0 bottom-0 w-0.5 bg-emerald-500/50 z-10"></div>
+                  <div
+                    class="h-full rounded-full transition-all duration-700 ease-out"
+                    :class="oddsCurrent >= 60 ? 'bg-gradient-to-r from-amber-500 to-emerald-400' : 'bg-gradient-to-r from-rose-500 to-amber-400'"
+                    :style="{ width: `${oddsCurrent}%` }"
+                  ></div>
+                </div>
+                <div class="flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  <span>Unvalidated (20%)</span>
+                  <span class="text-amber-400">Current ({{ oddsCurrent }}%)</span>
+                  <span class="text-emerald-400">Target (75%)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Meta AI Epistemic Auditor Card (Shown in Meta Mode) -->
+            <div
+              v-if="pipelineMode === 'meta'"
+              class="bg-gradient-to-br from-slate-900 to-slate-950 text-white p-6 md:p-8 rounded-3xl border border-amber-500/30 shadow-xl space-y-6"
             >
-              <RefreshCw v-if="isValiLoading" class="w-4 h-4 animate-spin" />
-              <Flame v-else class="w-4 h-4" />
-              <span>Analyze Field Evidence with Vali (The Mom Test)</span>
-            </button>
-          </div>
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                <div class="flex items-center gap-3">
+                  <div class="p-2.5 bg-amber-500/20 text-amber-400 rounded-xl border border-amber-500/30">
+                    <Compass class="w-6 h-6" />
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h4 class="text-xs font-black uppercase tracking-widest text-amber-400">Meta AI Epistemic Auditor</h4>
+                      <span class="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                        2 Research Rounds Executed
+                      </span>
+                    </div>
+                    <div class="text-sm font-bold text-slate-200 mt-0.5">
+                      Frontier Pioneer Opportunity &bull; Field Discovery
+                    </div>
+                  </div>
+                </div>
 
-          <!-- Vali Synthesis Response Box -->
-          <div class="p-5 bg-slate-950 rounded-2xl border border-slate-800 space-y-4">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-              <span class="text-[10px] font-black uppercase tracking-widest text-emerald-400">Vali Co-Pilot Feedback</span>
-              <span class="text-[10px] text-slate-500 font-bold">WhatsApp Voice Protocol</span>
+                <div class="text-left sm:text-right">
+                  <div class="text-[10px] font-black uppercase tracking-wider text-slate-400">Source Grounding Index</div>
+                  <div class="text-xl font-black text-emerald-400">
+                    {{ Math.round(currentCase.adaptive.source_grounding_index * 100) }}%
+                    <span class="text-xs font-medium text-slate-400">Grounded</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Critique Box -->
+              <div class="p-4 bg-slate-800/60 rounded-2xl border border-slate-700/60 text-xs text-slate-300 leading-relaxed italic">
+                "{{ currentCase.adaptive.audit_critique }}"
+              </div>
+
+              <!-- Experiments Grid -->
+              <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                  <h5 class="text-[11px] font-black uppercase tracking-wider text-amber-300 flex items-center gap-2">
+                    <Target class="w-4 h-4 text-amber-400" />
+                    Required Offline Discovery Experiments (The Mom Test)
+                  </h5>
+                  <span class="text-[10px] font-bold text-slate-400">Physical World Tasks</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div
+                    v-for="(experiment, idx) in currentCase.adaptive.offline_experiments"
+                    :key="idx"
+                    class="p-4 bg-amber-500/10 rounded-2xl border border-amber-500/25 flex items-start gap-3"
+                  >
+                    <div class="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs font-black shrink-0 mt-0.5">
+                      {{ idx + 1 }}
+                    </div>
+                    <p class="text-xs text-slate-200 leading-relaxed">{{ experiment }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Evidentiary Voids -->
+              <div class="space-y-3 pt-2">
+                <h5 class="text-[11px] font-black uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                  <ShieldAlert class="w-4 h-4 text-amber-400" />
+                  Evidentiary Gaps for Customer Discovery ({{ currentCase.adaptive.evidence_voids_detected }} Voids Caught)
+                </h5>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  <div
+                    v-for="(voidItem, vIdx) in currentCase.adaptive.evidence_voids"
+                    :key="vIdx"
+                    class="px-3.5 py-2.5 bg-slate-800/40 rounded-xl border border-slate-800 flex items-start gap-2.5 text-xs text-slate-300"
+                  >
+                    <div class="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0 mt-1.5"></div>
+                    <span class="leading-snug">{{ voidItem }}</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <p class="text-xs text-slate-300 leading-relaxed">
-              {{ valiOutput.coach_response }}
-            </p>
-
-            <div class="space-y-1.5 pt-2 border-t border-slate-800/80">
-              <div class="text-[10px] font-black uppercase tracking-wider text-slate-400">Extracted Empirical Evidence:</div>
-              <ul class="space-y-1 text-xs text-emerald-400">
-                <li v-for="(ev, idx) in valiOutput.extracted_evidence" :key="idx" class="flex items-start gap-2">
-                  <CheckCircle2 class="w-3.5 h-3.5 shrink-0 mt-0.5 text-emerald-500" />
-                  <span class="text-slate-300">{{ ev }}</span>
-                </li>
-              </ul>
+            <!-- Generic Baseline Note (Shown in Baseline Mode) -->
+            <div
+              v-else
+              class="p-6 bg-yellow-50/60 rounded-2xl border border-yellow-200 space-y-2 text-xs text-yellow-900"
+            >
+              <h5 class="font-bold flex items-center gap-1.5 text-yellow-950">
+                <AlertTriangle class="w-4 h-4 text-yellow-600" />
+                Sycophancy Risk Identified in Baseline Mode:
+              </h5>
+              <p class="leading-relaxed">
+                Notice how the generic 1-pass search gave an optimistic {{ activeScore.toFixed(1) }}/10 score without detecting that public Caribbean tax endpoints and store counts are missing. Switch to the <strong>Meta AI Epistemic Loop</strong> above to see how our reasoning auditor catches these voids and down-calibrates the score.
+              </p>
             </div>
 
-            <div class="text-[11px] font-bold text-amber-400 pt-1">
-              <strong>Next Action:</strong> {{ valiOutput.suggested_next_step }}
+            <!-- Actions / Roadmap Teaser (Exact Platform Copy & Buttons) -->
+            <div class="pt-8 border-t border-slate-200 flex flex-col items-center space-y-6">
+              <div class="text-center space-y-1.5">
+                <h4 class="text-2xl font-black text-slate-900">Guesswork is expensive. Evidence pays off.</h4>
+                <p class="text-slate-500 text-sm">Unlock the exact sequence of tasks used by top founders to prove this idea.</p>
+              </div>
+
+              <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 w-full max-w-xl">
+                <button
+                  @click="resetToInput"
+                  class="px-8 py-4 text-slate-600 hover:text-slate-900 font-bold text-xs uppercase tracking-widest transition-all cursor-pointer rounded-2xl border border-slate-200 hover:border-slate-300"
+                >
+                  Try Another Idea
+                </button>
+                <button
+                  @click="showUnlockModal = true"
+                  class="flex-1 px-10 py-5 bg-[color:var(--brand-primary)] text-white font-black rounded-2xl shadow-xl hover:bg-[color:var(--brand-dark)] transition-all transform hover:-translate-y-0.5 active:scale-95 flex items-center justify-center space-x-3 cursor-pointer"
+                >
+                  <span class="flex items-center uppercase tracking-widest text-sm font-extrabold">
+                    Unlock Roadmap
+                    <Lock class="w-4 h-4 ml-3" />
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </section>
-
-      <!-- Quantitative Benchmark Matrix Summary -->
-      <section class="bg-slate-900/60 rounded-3xl border border-slate-800 p-6 space-y-4">
-        <h3 class="text-sm font-black uppercase tracking-wider text-slate-300 flex items-center gap-2">
-          <Activity class="w-4 h-4 text-amber-400" />
-          5-Archetype Empirical Benchmark Summary Table
-        </h3>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead class="text-[10px] font-black uppercase tracking-wider text-slate-400 border-b border-slate-800">
-              <tr>
-                <th class="py-2.5 px-3">#</th>
-                <th class="py-2.5 px-3">Archetype</th>
-                <th class="py-2.5 px-3">Baseline (1-Pass)</th>
-                <th class="py-2.5 px-3">Meta Adaptive Loop</th>
-                <th class="py-2.5 px-3">Voids</th>
-                <th class="py-2.5 px-3">SGI</th>
-                <th class="py-2.5 px-3">Outcome</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-800/60 text-slate-300">
-              <tr v-for="(bCase, bIdx) in cases" :key="bIdx" class="hover:bg-slate-800/30 transition-colors">
-                <td class="py-2.5 px-3 font-mono font-bold">{{ bIdx + 1 }}</td>
-                <td class="py-2.5 px-3 font-semibold text-white">{{ bCase.case.name }}</td>
-                <td class="py-2.5 px-3 text-yellow-400 font-mono">{{ bCase.baseline.score.toFixed(1) }} ({{ Math.round(bCase.baseline.epistemic_confidence * 100) }}%)</td>
-                <td class="py-2.5 px-3 text-amber-400 font-mono font-bold">{{ bCase.adaptive.score.toFixed(1) }} ({{ Math.round(bCase.adaptive.epistemic_confidence * 100) }}%)</td>
-                <td class="py-2.5 px-3 font-mono font-bold text-amber-300">{{ bCase.adaptive.evidence_voids_detected }}</td>
-                <td class="py-2.5 px-3 font-mono text-emerald-400">{{ Math.round(bCase.adaptive.source_grounding_index * 100) }}%</td>
-                <td class="py-2.5 px-3 text-[11px] text-slate-400">{{ bCase.adaptive.offline_experiments.length }} field experiments prescribed</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
+      </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="border-t border-slate-900 bg-slate-950 py-8 px-4 text-center text-xs text-slate-500 space-y-2">
-      <div>
-        Built with &hearts; by <strong class="text-slate-300">Anthony Baptiste</strong> for the <strong class="text-amber-400">Meta Global AI Developer Hackathon 2026</strong>.
+    <!-- UNLOCK ROADMAP MODAL PROMPT (Redirect to Main App) -->
+    <div
+      v-if="showUnlockModal"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-fade-in"
+    >
+      <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 space-y-6 relative">
+        <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-[color:var(--brand-primary)] flex items-center justify-center text-xl font-black">
+          🚀
+        </div>
+
+        <div class="space-y-2">
+          <h3 class="text-2xl font-black text-slate-900 tracking-tight">Ready to Execute Your Validation Roadmap?</h3>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            This showcase demonstrates the <strong>Meta AI Epistemic Research Loop</strong> built for the hackathon.
+            To permanently save your venture, access the interactive 5-Pillar Workshop, and collaborate with <strong>Vali on WhatsApp</strong>, continue on the full platform.
+          </p>
+        </div>
+
+        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-1.5 text-xs text-slate-600">
+          <div class="font-bold text-slate-800 flex items-center gap-1.5">
+            <CheckCircle2 class="w-4 h-4 text-emerald-600" />
+            Active Venture Context Saved:
+          </div>
+          <div class="italic text-slate-500">"{{ idea }}"</div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3">
+          <button
+            @click="showUnlockModal = false"
+            class="px-5 py-3 rounded-xl border border-slate-200 text-slate-600 hover:text-slate-900 font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
+          >
+            Stay on Demo
+          </button>
+          <a
+            href="https://app.research-navigator.ai"
+            target="_blank"
+            class="flex-1 py-3 px-6 bg-[color:var(--brand-primary)] hover:bg-[color:var(--brand-dark)] text-white font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <span>Continue to Full Platform</span>
+            <ArrowRight class="w-4 h-4" />
+          </a>
+        </div>
       </div>
-      <div>
-        Powered by <span class="text-slate-400">Meta Muse Spark Open</span> on Baseten &amp; <span class="text-slate-400">Meta Llama 3.3 70B</span> on Fireworks AI.
+    </div>
+
+    <!-- Platform Footer -->
+    <footer class="py-8 border-t border-slate-200 bg-white text-center text-xs text-slate-500">
+      <div class="max-w-7xl mx-auto px-4 space-y-2">
+        <p>&copy; {{ new Date().getFullYear() }} Research Navigator &bull; Meta Global AI Developer Hackathon 2026 (Startup Track)</p>
+        <p class="text-[11px] text-slate-400">
+          Powered by Meta Muse Spark Open on Baseten + Meta Llama 3.3 70B on Fireworks AI
+        </p>
       </div>
     </footer>
   </div>
