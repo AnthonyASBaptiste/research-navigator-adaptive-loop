@@ -7,7 +7,7 @@
 [![Meta Open-Weights](https://img.shields.io/badge/Meta_AI-Muse_Spark_Open_+_Llama_3.3_70B-blueviolet)](https://www.llama.com/)
 [![Baseten](https://img.shields.io/badge/Inference-Baseten-black)](https://www.baseten.co/)
 [![Fireworks AI](https://img.shields.io/badge/Inference-Fireworks_AI-orange)](https://fireworks.ai/)
-[![Staging Live](https://img.shields.io/badge/Demo-staging.research--navigator.ai-green)](https://staging.research-navigator.ai)
+[![Staging Live](https://img.shields.io/badge/Demo-meta--hackathon.research--navigator.ai-green)](https://meta-hackathon.research-navigator.ai)
 
 ---
 
@@ -143,7 +143,7 @@ pytest tests/ -v
 ---
 
 ## 🔗 Live Deployments & Provenance
-- **Live Staging Platform**: [https://staging.research-navigator.ai](https://staging.research-navigator.ai)
+- **Live Staging Platform**: [https://meta-hackathon.research-navigator.ai](https://meta-hackathon.research-navigator.ai)
 - **Live Cloud Run Demo Backend**: [https://backend-go-412743311224.us-central1.run.app/health](https://backend-go-412743311224.us-central1.run.app/health)
 - **3-Minute Loom Demo Video**: *[Link provided in Devpost Submission]*
 - **Raw Provenance Log**: See [`provenance/eval_results.json`](provenance/eval_results.json) for recorded raw execution metrics.
