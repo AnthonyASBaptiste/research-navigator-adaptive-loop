@@ -31,41 +31,57 @@ In strict compliance with the hackathon rules and guidelines, this public reposi
 
 ## ⚡ Quickstart for Judges (< 60 Seconds)
 
-Judges can execute and verify the entire agent architecture **with or without API keys**.
+Judges can evaluate and verify the entire agent architecture via the **Live Web Showcase**, via the **CLI with zero API keys**, or in **Live Meta AI mode**.
 
-### 1. Installation
+### 🌐 1. Live Interactive Web Showcase (Zero Installation)
+Visit the live interactive web showcase deployed directly from this repository:
+👉 **[https://meta-hackathon.research-navigator.ai](https://meta-hackathon.research-navigator.ai)**
+* 1-click preset selector for all 5 venture archetypes.
+* Dual execution: **Instant Provenance Replay (< 1s)** vs **Live Meta AI Pipeline (~45s)**.
+* Interactive Vali Co-Pilot simulator for Mom Test field note analysis.
+
+---
+
+### 💻 2. Python CLI Installation (Local)
 ```bash
 git clone https://github.com/AnthonyASBaptiste/research-navigator-adaptive-loop.git
 cd research-navigator-adaptive-loop
 pip install -r requirements.txt
 ```
 
-### 2. Zero-Key Instant Verification (Replay Mode)
+### 3. Zero-Key Instant Verification (CLI Replay Mode)
 Experience the exact execution of **Case 4: Caribbean Shopify VAT Plugin** using our recorded raw provenance outputs from the live run:
 ```bash
 python demo.py --replay
 ```
 *Witness the Epistemic Auditor identify 6 evidentiary voids, dispatch Round 2 retrieval, down-calibrate confidence from 92% to 45%, and prescribe 2 mandatory offline customer discovery experiments.*
 
-### 3. Run the Full 5-Case Benchmark Comparison
+### 4. Run the Full 5-Case Benchmark Comparison
 ```bash
 python eval_benchmark.py --replay
 ```
 *Renders the complete 5-case comparative matrix in your terminal, showing -42.2% sycophancy reduction and 36 caught evidentiary voids.*
 
-### 4. Test the Vali Co-Pilot Simulator (No WhatsApp setup required)
+### 5. Test the Vali Co-Pilot Simulator (No WhatsApp setup required)
 Simulate a founder returning from a Caribbean merchant discovery interview with a field voice note:
 ```bash
 python vali_simulator.py --sample
 ```
 *Vali parses the interview notes using Mom Test criteria, confirms friction, extracts willingness to pay, and updates the venture's evidence log.*
 
-### 5. Live Execution Mode (With Your Own Meta API Keys)
+### 6. Live Execution Mode (With Your Own Meta API Keys)
 Copy `.env.example` to `.env` and supply your Baseten, Fireworks, or Groq API key:
 ```bash
 cp .env.example .env
 # Add your FIREWORKS_API_KEY, BASETEN_API_KEY, or GROQ_API_KEY
 python demo.py --live --idea "Cross-border remittance bypassing commercial bank FX queues in Trinidad"
+```
+
+### 7. Run the Web Showcase Locally
+```bash
+npm install
+npm run dev
+# Opens interactive Vite dashboard at http://localhost:5173
 ```
 
 ---
