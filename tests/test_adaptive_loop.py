@@ -13,9 +13,9 @@ repo_root = Path(__file__).parent.parent
 if str(repo_root) not in sys.path:
     sys.path.insert(0, str(repo_root))
 
-from adaptive_loop.regional_anchors import enforce_regional_query_bounding
+from adaptive_loop.regional_anchors import enforce_regional_query_bounding, normalize_region
 from adaptive_loop.evidence_ledger import EvidenceLedger
-from adaptive_loop.pipeline import prepare_litellm_kwargs, resolve_model_with_fallback
+from adaptive_loop.pipeline import prepare_litellm_kwargs, resolve_model_with_fallback, calculate_calibrated_score
 
 
 def test_enforce_regional_query_bounding():
@@ -87,3 +87,35 @@ def test_provenance_dataset_integrity():
     assert len(cases) == 5, "Benchmark evaluation must cover all 5 archetypes"
     total_voids = sum(c.get("adaptive", {}).get("evidence_voids_detected", 0) for c in cases)
     assert total_voids == 36, "Proven 36 evidentiary voids must be recorded"
+
+
+def test_normalize_region():
+    assert normalize_region("caribbean") == "caribbean"
+    assert normalize_region("SEA") == "southeast_asia"
+    assert normalize_region("latin_america") == "latam"
+    assert normalize_region("US") == "us_eu"
+    assert normalize_region("unknown_mars") == "global"
+
+
+def test_calculate_calibrated_score():
+    # Baseline returns raw base score
+    base_score = calculate_calibrated_score(
+        base_market_score=80.0,
+        confidence=0.90,
+        evidence_voids_count=0,
+        sgi=1.0,
+        is_adaptive=False
+    )
+    assert base_score == 80.0
+
+    # Adaptive loop heavily penalizes voids and scales with confidence
+    adaptive_score = calculate_calibrated_score(
+        base_market_score=80.0,
+        confidence=0.45,
+        evidence_voids_count=6,
+        sgi=0.8,
+        is_adaptive=True
+    )
+    # Expected: (80 * 0.45) + (0.8 * 12) - (6 * 3.5) = 36 + 9.6 - 21 = 24.6
+    assert 20.0 <= adaptive_score <= 35.0
+    assert adaptive_score < base_score

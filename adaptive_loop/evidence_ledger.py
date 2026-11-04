@@ -6,7 +6,7 @@ to ensure research findings are empirically verifiable and regionally anchored.
 
 from typing import Dict, Any, List
 from urllib.parse import urlparse
-from .regional_anchors import REGIONAL_ANCHORS
+from .regional_anchors import REGIONAL_ANCHORS, normalize_region
 
 
 class EvidenceLedger:
@@ -15,7 +15,7 @@ class EvidenceLedger:
     Calculates the Source Grounding Index (SGI) and regional grounding ratio.
     """
     def __init__(self, target_region: str = "caribbean"):
-        self.target_region = target_region
+        self.target_region = normalize_region(target_region)
         self.sources: List[Dict[str, Any]] = []
         self._seen_urls = set()
 
@@ -37,8 +37,8 @@ class EvidenceLedger:
             pass
 
         is_regional = False
-        anchors = REGIONAL_ANCHORS.get(self.target_region.lower(), {})
-        keywords = anchors.get("keywords", [self.target_region.lower()])
+        anchors = REGIONAL_ANCHORS.get(self.target_region, {})
+        keywords = anchors.get("keywords", [self.target_region])
         cc_tlds = anchors.get("cc_tlds", [])
         authoritative = anchors.get("authoritative_domains", [])
 

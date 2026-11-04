@@ -7,7 +7,7 @@
 [![Meta Open-Weights](https://img.shields.io/badge/Meta_AI-Muse_Spark_Open_+_Llama_3.3_70B-blueviolet)](https://www.llama.com/)
 [![Baseten](https://img.shields.io/badge/Inference-Baseten-black)](https://www.baseten.co/)
 [![Fireworks AI](https://img.shields.io/badge/Inference-Fireworks_AI-orange)](https://fireworks.ai/)
-[![Staging Live](https://img.shields.io/badge/Demo-staging.research--navigator.ai-green)](https://staging.research-navigator.ai)
+[![Staging Live](https://img.shields.io/badge/Demo-meta--hackathon.research--navigator.ai-green)](https://meta-hackathon.research-navigator.ai)
 
 ---
 
@@ -31,42 +31,68 @@ In strict compliance with the hackathon rules and guidelines, this public reposi
 
 ## ⚡ Quickstart for Judges (< 60 Seconds)
 
-Judges can execute and verify the entire agent architecture **with or without API keys**.
+Judges can evaluate and verify the entire agent architecture via the **Live Web Showcase**, via the **CLI with zero API keys**, or in **Live Meta AI mode**.
 
-### 1. Installation
+### 🌐 1. Live Interactive Web Showcase (Zero Installation)
+Visit the live interactive web showcase deployed directly from this repository:
+👉 **[https://meta-hackathon.research-navigator.ai](https://meta-hackathon.research-navigator.ai)**
+* 1-click preset selector for all 5 venture archetypes.
+* Dual execution: **Instant Provenance Replay (< 1s)** vs **Live Meta AI Pipeline (~45s)**.
+* Interactive Vali Co-Pilot simulator for Mom Test field note analysis.
+
+---
+
+### 💻 2. Python CLI Installation (Local)
 ```bash
 git clone https://github.com/AnthonyASBaptiste/research-navigator-adaptive-loop.git
 cd research-navigator-adaptive-loop
 pip install -r requirements.txt
 ```
 
-### 2. Zero-Key Instant Verification (Replay Mode)
+### 3. Zero-Key Instant Verification (CLI Replay Mode)
 Experience the exact execution of **Case 4: Caribbean Shopify VAT Plugin** using our recorded raw provenance outputs from the live run:
 ```bash
 python demo.py --replay
 ```
 *Witness the Epistemic Auditor identify 6 evidentiary voids, dispatch Round 2 retrieval, down-calibrate confidence from 92% to 45%, and prescribe 2 mandatory offline customer discovery experiments.*
 
-### 3. Run the Full 5-Case Benchmark Comparison
+### 4. Run the Full 5-Case Benchmark Comparison
 ```bash
 python eval_benchmark.py --replay
 ```
 *Renders the complete 5-case comparative matrix in your terminal, showing -42.2% sycophancy reduction and 36 caught evidentiary voids.*
 
-### 4. Test the Vali Co-Pilot Simulator (No WhatsApp setup required)
+### 5. Test the Vali Co-Pilot Simulator (No WhatsApp setup required)
 Simulate a founder returning from a Caribbean merchant discovery interview with a field voice note:
 ```bash
 python vali_simulator.py --sample
 ```
 *Vali parses the interview notes using Mom Test criteria, confirms friction, extracts willingness to pay, and updates the venture's evidence log.*
 
-### 5. Live Execution Mode (With Your Own Meta API Keys)
+### 6. Live Execution Mode (With Your Own Meta API Keys)
 Copy `.env.example` to `.env` and supply your Baseten, Fireworks, or Groq API key:
 ```bash
 cp .env.example .env
 # Add your FIREWORKS_API_KEY, BASETEN_API_KEY, or GROQ_API_KEY
 python demo.py --live --idea "Cross-border remittance bypassing commercial bank FX queues in Trinidad"
 ```
+
+### 7. Run the Web Showcase Locally (Zero Configuration)
+The frontend is completely self-contained and pre-configured to query our deployed Google Cloud Run demo orchestrator out of the box. No Docker, no PostgreSQL, and no API keys required:
+```bash
+git clone https://github.com/AnthonyASBaptiste/research-navigator-adaptive-loop.git
+cd research-navigator-adaptive-loop
+
+# 1. Install dependencies (npm workspaces automatically configures web)
+npm install
+
+# 2. Start local interactive showcase
+npm run dev
+# Opens at http://localhost:5173
+```
+* **Pre-Configured Demo Backend**: Automatically connects to `https://backend-go-412743311224.us-central1.run.app` (CORS enabled for all localhost origins).
+* **Dual Execution**: Toggle between **Live Cloud Run API (~30s)** for real Tavily + Baseten + Fireworks multi-agent queries, or **Instant Replay (< 1s)** for immediate evaluation.
+* **100% System Independent**: If running offline or behind a strict firewall, the app gracefully falls back to the local calibrated benchmark dataset with zero crashes.
 
 ---
 
@@ -120,17 +146,51 @@ Evaluated across 5 diverse venture archetypes using `eval_benchmark.py`:
 
 | Scenario & Archetype | Baseline (1-Pass) | Meta Adaptive Loop | Voids Caught | SGI | Calibrated Outcome |
 | :--- | :---: | :---: | :---: | :---: | :--- |
-| **1. The Buzzword Hand-Wave** *(Quantum CRE leasing)* | Yellow (85% conf) | **Field Discovery (42% conf)** | **8** | 56% | Caught ungrounded viral K-factor and zero CAC assumptions. Prescribed 3 pilot experiments. |
-| **2. The Contradictory Market** *(US-TT Remittance)* | Yellow (90% conf) | **Field Discovery (44% conf)** | **8** | **100%** | Exposed Central Bank exchange control contradictions. Prescribed Central Bank interviews. |
-| **3. The Obscure Regional Niche** *(Dominica LoRaWAN)* | Yellow (85% conf) | **Field Discovery (58% conf)** | **6** | **100%** | Detected zero public LoRaWAN rural data. Prescribed 3-month cooperative sensor test. |
-| **4. The Grounded B2B SaaS** *(Shopify VAT plugin)* | Yellow (92% conf) | **Field Discovery (45% conf)** | **6** | **100%** | Caught missing active merchant counts and Inland Revenue API specs. Prescribed 30 discovery interviews. |
-| **5. The Unverifiable Consumer Habit** *(Hydration stake)* | Red (94% conf) | **Field Discovery (46% conf)** | **8** | 50% | Refused to treat macro wellness TAM as proof of deposit staking. Prescribed 100-user default pilot. |
+| **1. The Buzzword Hand-Wave** *(Quantum CRE leasing)* | 78.0 (85% conf) | **28.0 (42% conf)** | **8** | 56% | Caught ungrounded viral K-factor and zero CAC assumptions. Prescribed 3 pilot experiments. |
+| **2. The Contradictory Market** *(US-TT Remittance)* | 82.0 (90% conf) | **32.0 (44% conf)** | **8** | **100%** | Exposed Central Bank exchange control contradictions. Prescribed Central Bank interviews. |
+| **3. The Obscure Regional Niche** *(Dominica LoRaWAN)* | 74.0 (85% conf) | **48.0 (58% conf)** | **6** | **100%** | Detected zero public LoRaWAN rural data. Prescribed 3-month cooperative sensor test. |
+| **4. The Grounded B2B SaaS** *(Shopify VAT plugin)* | 86.0 (92% conf) | **44.0 (45% conf)** | **6** | **100%** | Caught missing active merchant counts and Inland Revenue API specs. Prescribed 30 discovery interviews. |
+| **5. The Unverifiable Consumer Habit** *(Hydration stake)* | 70.0 (94% conf) | **30.0 (46% conf)** | **8** | 50% | Refused to treat macro wellness TAM as proof of deposit staking. Prescribed 100-user default pilot. |
 
 ### 🎯 Key Benchmark Takeaways
 - **Evidentiary Voids Exposed**: **36 critical voids caught** across 5 ventures (Baseline caught **0**).
 - **Epistemic Calibration**: Reduced dangerous false confidence from **89.2%** down to an honest **47.0%** (**-42.2% sycophancy reduction**).
+- **Score Calibration**: Shifted from uncritical vanity scores (**78.0 avg**) to risk-adjusted reality (**36.4 avg**, penalized -3.5 pts per void).
 - **Regional Moat Integrity**: Achieved **up to 100% Regional Source Grounding Index (SGI)** on Caribbean ventures.
 - **Honest Refusal Rate**: **100% (5/5)** refusal to hallucinate certainty on frontier startup concepts.
+
+---
+
+## 💡 The 4-Part Decision Signal Architecture
+
+Generic startup validation tools provide a single sycophantic score (e.g. "85/100: Great idea!") based on high-level macro market reports. Research Navigator rejects single-number hype. Instead, our pipeline outputs a **composite 4-part Decision Signal**:
+
+1. **Calibrated Viability Score (18–85)**: Dynamically computed as `(Base Market TAM * Epistemic Confidence) + SGI Grounding Bonus - (Voids Count * 3.5 pts)`. When an idea contains unverified claims, its score plummets.
+2. **Calibrated Epistemic Confidence (0–100%)**: Measures the probability that the available empirical evidence actually supports the founder's thesis.
+3. **Evidentiary Voids Checklist**: Explicit bulleted list of the exact operational, regulatory, or economic unknowns that must be verified before building code.
+4. **Prescribed Physical Field Experiments**: Concrete, real-world customer discovery tasks formulated to resolve each detected void in the physical world (interviews, pilots, regulatory filings).
+
+---
+
+## 🌍 Multi-Regional Anchoring Engine
+
+While Caribbean and CARICOM served as our initial proving ground (featuring `.tt`, `.jm`, `.bb`, Central Bank, IRD, and WiPay integrations), the `REGIONAL_ANCHORS` engine natively supports multiple regional jurisdictions with alias resolution:
+
+- **Caribbean (`caribbean`, `caricom`, `tt`, `jm`)**: 21+ authoritative domains, 11 ccTLDs, CARICOM/OECS economic registries.
+- **Latin America (`latam`, `latin_america`, `brazil`, `mexico`)**: Central banks (BACEN, Banxico), tax authorities (SAT, DIAN), Pix/SPEI rails, and major LatAm business media.
+- **Southeast Asia (`southeast_asia`, `sea`, `singapore`, `indonesia`)**: MAS, Bank Indonesia, PayNow, DuitNow, Grab/Gojek ecosystems.
+- **United States & EU (`us_eu`, `us`, `eu`, `uk`)**: SEC EDGAR, Companies House, HMRC, and pan-European regulatory bodies.
+- **Global (`global`)**: Global search unconstrained by territory boundaries.
+
+---
+
+## 🔄 Two-Round Stopping Rationale (The Offline Pivot)
+
+Judges may ask: *Why does the adaptive search loop cap at 2 rounds?*
+
+- **Round 1 (Broad Regional Retrieval)**: Enforces geographic query bounding and gathers authoritative macro, regulatory, and commercial sources.
+- **Round 2 (Targeted Gap-Resolution Retrieval)**: The Epistemic Auditor identifies specific missing claims and dispatches targeted queries to resolve those exact voids.
+- **The Epistemic Stopping Rule**: If after two rounds of deep retrieval against authoritative regional databases the answer still cannot be found on the public internet, **further scraping only produces diminishing returns, LLM hallucinations, and sycophantic filler**. At this boundary, the only epistemically honest decision is to stop search, declare a **"Field Discovery • Pioneer Opportunity"**, and instruct the founder to gather physical evidence offline using **Vali Co-Pilot** (The Mom Test).
 
 ---
 
@@ -143,7 +203,7 @@ pytest tests/ -v
 ---
 
 ## 🔗 Live Deployments & Provenance
-- **Live Staging Platform**: [https://staging.research-navigator.ai](https://staging.research-navigator.ai)
+- **Live Staging Platform**: [https://meta-hackathon.research-navigator.ai](https://meta-hackathon.research-navigator.ai)
 - **Live Cloud Run Demo Backend**: [https://backend-go-412743311224.us-central1.run.app/health](https://backend-go-412743311224.us-central1.run.app/health)
 - **3-Minute Loom Demo Video**: *[Link provided in Devpost Submission]*
 - **Raw Provenance Log**: See [`provenance/eval_results.json`](provenance/eval_results.json) for recorded raw execution metrics.
