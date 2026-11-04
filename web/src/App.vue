@@ -312,6 +312,20 @@ const scoringBreakdown = computed(() => {
   }
 })
 
+const getIndicatorMeta = (category: string) => {
+  const cat = category.toLowerCase()
+  if (cat.includes('market')) {
+    return { title: 'Market Demand', icon: '🎯', dotColor: 'bg-emerald-500', badgeClass: 'bg-emerald-50 text-emerald-800 border-emerald-200' }
+  }
+  if (cat.includes('compet')) {
+    return { title: 'Competition Moat', icon: '⚔️', dotColor: 'bg-blue-500', badgeClass: 'bg-blue-50 text-blue-800 border-blue-200' }
+  }
+  if (cat.includes('urgenc')) {
+    return { title: 'Customer Urgency', icon: '⏱️', dotColor: 'bg-amber-500', badgeClass: 'bg-amber-50 text-amber-800 border-amber-200' }
+  }
+  return { title: category.toUpperCase(), icon: '📊', dotColor: 'bg-slate-500', badgeClass: 'bg-slate-50 text-slate-800 border-slate-200' }
+}
+
 const activeBrutalHonesty = computed(() => {
   if (liveResult.value?.brutal_honesty) {
     return liveResult.value.brutal_honesty
@@ -371,7 +385,7 @@ idea.value = cases.value[3].case.idea
 <template>
   <div class="min-h-screen bg-[color:var(--brand-bg)] text-[color:var(--brand-text)] flex flex-col font-sans selection:bg-emerald-500 selection:text-white">
     <!-- Platform Top Nav -->
-    <header class="bg-white border-b border-slate-200/80 px-4 py-3 sticky top-0 z-40 shadow-xs">
+    <header class="bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 py-2.5 sticky top-0 z-30 shadow-2xs">
       <div class="max-w-7xl mx-auto flex items-center justify-between">
         <div class="flex items-center gap-3">
           <div class="w-8 h-8 rounded-xl bg-[color:var(--brand-primary)] flex items-center justify-center text-white font-black text-sm shadow-sm">
@@ -392,7 +406,7 @@ idea.value = cases.value[3].case.idea
           <a
             href="https://github.com/AnthonyASBaptiste/research-navigator-adaptive-loop"
             target="_blank"
-            class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
+            class="hidden sm:flex items-center gap-1.5 px-3.5 py-2 min-h-[36px] rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
           >
             <FileCode2 class="w-3.5 h-3.5 text-slate-600" />
             <span>GitHub</span>
@@ -401,7 +415,7 @@ idea.value = cases.value[3].case.idea
           <a
             href="https://app.research-navigator.ai"
             target="_blank"
-            class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[color:var(--brand-primary)] hover:bg-[color:var(--brand-dark)] text-white font-bold transition-all shadow-xs cursor-pointer"
+            class="flex items-center gap-1.5 px-4 py-2 min-h-[36px] rounded-xl bg-[color:var(--brand-primary)] hover:bg-[color:var(--brand-dark)] text-white font-bold transition-all shadow-xs cursor-pointer"
           >
             <span>Full Platform</span>
             <ExternalLink class="w-3 h-3" />
@@ -440,23 +454,26 @@ idea.value = cases.value[3].case.idea
             </span>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <button
               v-for="(c, idx) in cases"
               :key="c.case.id"
               @click="selectArchetype(idx, true)"
-              class="p-2.5 bg-white hover:bg-emerald-50/60 rounded-xl border transition-all text-left flex items-start gap-2.5 cursor-pointer group shadow-2xs"
-              :class="selectedCaseIndex === idx ? 'border-emerald-500 ring-2 ring-emerald-500/20' : 'border-slate-200 hover:border-emerald-300'"
+              class="p-3 bg-white hover:bg-emerald-50/60 rounded-2xl border transition-all text-left flex items-start gap-3 cursor-pointer group shadow-2xs"
+              :class="[
+                selectedCaseIndex === idx ? 'border-emerald-500 ring-2 ring-emerald-500/20 bg-emerald-50/30' : 'border-slate-200 hover:border-emerald-300',
+                idx === 4 ? 'sm:col-span-2' : ''
+              ]"
             >
-              <span class="w-5 h-5 rounded-md bg-slate-100 group-hover:bg-emerald-100 text-slate-700 group-hover:text-emerald-800 text-[10px] font-black flex items-center justify-center shrink-0 mt-0.5">
+              <span class="w-6 h-6 rounded-lg bg-slate-100 group-hover:bg-slate-900 text-slate-700 group-hover:text-white text-xs font-black flex items-center justify-center shrink-0 mt-0.5 transition-colors">
                 {{ idx + 1 }}
               </span>
               <div class="min-w-0 flex-1">
-                <div class="text-xs font-bold text-slate-800 group-hover:text-emerald-900 leading-snug truncate">
+                <div class="text-xs font-bold text-slate-900 group-hover:text-emerald-950 leading-snug">
                   {{ c.case.name }}
                 </div>
-                <div class="text-[10px] text-slate-500 font-medium truncate mt-0.5">
-                  {{ c.case.region.toUpperCase() }} &bull; {{ c.case.expected_failure_mode }}
+                <div class="text-[10px] text-slate-500 font-medium mt-0.5 leading-tight">
+                  <span class="font-bold text-slate-700">{{ c.case.region.toUpperCase() }}</span> &bull; {{ c.case.expected_failure_mode }}
                 </div>
               </div>
             </button>
@@ -507,7 +524,7 @@ idea.value = cases.value[3].case.idea
                 <button
                   type="button"
                   @click="executionEngine = 'live'"
-                  class="px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1.5"
+                  class="px-3 py-1.5 min-h-[30px] rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1.5"
                   :class="executionEngine === 'live' ? 'bg-white text-emerald-800 shadow-2xs font-black' : 'text-slate-500 hover:text-slate-800'"
                 >
                   <span class="w-1.5 h-1.5 rounded-full bg-emerald-500" :class="executionEngine === 'live' ? 'animate-pulse' : ''"></span>
@@ -516,7 +533,7 @@ idea.value = cases.value[3].case.idea
                 <button
                   type="button"
                   @click="executionEngine = 'replay'"
-                  class="px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1.5"
+                  class="px-3 py-1.5 min-h-[30px] rounded-lg text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1.5"
                   :class="executionEngine === 'replay' ? 'bg-white text-slate-900 shadow-2xs font-black' : 'text-slate-500 hover:text-slate-800'"
                 >
                   <span>⚡ Instant Replay (&lt;1s)</span>
@@ -744,41 +761,42 @@ idea.value = cases.value[3].case.idea
             <!-- Scoring Formula Drawer -->
             <div
               v-if="showMathBreakdown"
-              class="mt-4 max-w-xl mx-auto p-4 rounded-2xl bg-slate-950/85 backdrop-blur-md border border-white/20 text-white text-left text-xs space-y-3 animate-fade-in shadow-2xl"
+              class="mt-4 max-w-xl mx-auto p-5 rounded-2xl bg-black/35 backdrop-blur-md border border-white/25 text-white text-left text-xs space-y-3 animate-fade-in shadow-2xl"
             >
-              <div class="flex items-center justify-between border-b border-white/10 pb-2">
-                <span class="font-extrabold uppercase tracking-wider text-[10px] text-amber-400">
+              <div class="flex items-center justify-between border-b border-white/15 pb-2.5">
+                <span class="font-extrabold uppercase tracking-wider text-[11px] text-amber-300 flex items-center gap-1.5">
+                  <Sparkles class="w-3.5 h-3.5 text-amber-400" />
                   Epistemic Scoring Formula
                 </span>
-                <span class="font-mono text-[10px] text-slate-400">
+                <span class="font-mono text-[10px] text-white/80 bg-white/10 px-2 py-0.5 rounded-md border border-white/15 font-bold">
                   {{ pipelineMode === 'meta' ? 'Meta Adaptive Loop' : '1-Pass Linear Baseline' }}
                 </span>
               </div>
 
-              <div class="space-y-1.5 font-mono text-[11px]">
-                <div class="flex justify-between items-center text-slate-300">
+              <div class="space-y-2 font-mono text-[11px]">
+                <div class="flex justify-between items-center text-white/90">
                   <span>1. Base Market Opportunity (TAM/Need):</span>
-                  <span class="font-bold text-white">{{ scoringBreakdown.baseTam }} / 10</span>
+                  <span class="font-bold text-white bg-white/10 px-2 py-0.5 rounded">{{ scoringBreakdown.baseTam }} / 10</span>
                 </div>
-                <div class="flex justify-between items-center text-slate-300">
+                <div class="flex justify-between items-center text-white/90">
                   <span>2. × Epistemic Auditor Rigor:</span>
-                  <span class="font-bold text-amber-300">× {{ scoringBreakdown.confidencePct }}%</span>
+                  <span class="font-bold text-amber-300 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">× {{ scoringBreakdown.confidencePct }}%</span>
                 </div>
-                <div v-if="pipelineMode === 'meta'" class="flex justify-between items-center text-rose-300">
+                <div v-if="pipelineMode === 'meta'" class="flex justify-between items-center text-rose-200">
                   <span>3. − Evidentiary Voids Penalty ({{ scoringBreakdown.voidsCount }} voids):</span>
-                  <span class="font-bold">−{{ scoringBreakdown.voidPenalty }} pts</span>
+                  <span class="font-bold bg-rose-500/20 px-2 py-0.5 rounded border border-rose-500/30">−{{ scoringBreakdown.voidPenalty }} pts</span>
                 </div>
-                <div v-if="pipelineMode === 'meta'" class="flex justify-between items-center text-emerald-300">
+                <div v-if="pipelineMode === 'meta'" class="flex justify-between items-center text-emerald-200">
                   <span>4. + Regional Grounding Bonus ({{ scoringBreakdown.sgiPercent }}% SGI):</span>
-                  <span class="font-bold">+{{ scoringBreakdown.regionalBonus }} pts</span>
+                  <span class="font-bold bg-emerald-500/20 px-2 py-0.5 rounded border border-emerald-500/30">+{{ scoringBreakdown.regionalBonus }} pts</span>
                 </div>
-                <div class="border-t border-white/15 pt-1.5 flex justify-between items-center text-white font-bold text-xs">
+                <div class="border-t border-white/20 pt-2 flex justify-between items-center text-white font-bold text-xs">
                   <span>= Calibrated Viability Score:</span>
-                  <span class="text-amber-400 font-black text-sm">{{ scoringBreakdown.finalScore }} / 10</span>
+                  <span class="text-amber-300 font-black text-base">{{ scoringBreakdown.finalScore }} / 10</span>
                 </div>
               </div>
 
-              <div class="border-t border-white/10 pt-2 text-[10px] text-slate-300 leading-relaxed font-sans">
+              <div class="border-t border-white/15 pt-2.5 text-[11px] text-white/85 leading-relaxed font-sans bg-white/10 p-2.5 rounded-xl border border-white/10">
                 <strong>Validation Strength ({{ scoringBreakdown.validationOdds }}%):</strong> Derived as <em>Score × 7.5%</em> to position the venture along Alberto Savoia's de-risking curve from an unvalidated raw hypothesis (20%) to an investable milestone (75%+).
               </div>
             </div>
@@ -812,13 +830,16 @@ idea.value = cases.value[3].case.idea
                 <div
                   v-for="(text, category) in activeIndicators"
                   :key="category"
-                  class="p-5 bg-slate-50/80 rounded-2xl border border-slate-200/80 flex flex-col justify-between space-y-2 group hover:border-emerald-300 transition-all"
+                  class="p-5 bg-slate-50/80 rounded-2xl border border-slate-200/80 flex flex-col justify-between space-y-3 group hover:border-emerald-300 hover:shadow-2xs transition-all"
                 >
-                  <div class="flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    <h6 class="text-[10px] font-black uppercase tracking-wider text-slate-700">
-                      {{ category }}
-                    </h6>
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm">{{ getIndicatorMeta(category as string).icon }}</span>
+                      <h6 class="text-[11px] font-black uppercase tracking-wider text-slate-800">
+                        {{ getIndicatorMeta(category as string).title }}
+                      </h6>
+                    </div>
+                    <span class="w-2 h-2 rounded-full" :class="getIndicatorMeta(category as string).dotColor"></span>
                   </div>
                   <p class="text-xs text-slate-600 leading-relaxed font-medium">
                     {{ text }}
@@ -1039,7 +1060,7 @@ idea.value = cases.value[3].case.idea
     <!-- =================================================================== -->
     <div
       v-if="showValiModal"
-      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-xs animate-fade-in"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in"
     >
       <div class="bg-slate-900 rounded-3xl max-w-xl w-full border border-emerald-500/30 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         <!-- WhatsApp-style Header -->
@@ -1058,7 +1079,8 @@ idea.value = cases.value[3].case.idea
           </div>
           <button
             @click="showValiModal = false"
-            class="text-emerald-200 hover:text-white p-1 rounded-lg hover:bg-emerald-700 transition-colors cursor-pointer text-lg font-bold"
+            class="w-8 h-8 rounded-full bg-emerald-700/70 hover:bg-emerald-700 text-emerald-100 hover:text-white flex items-center justify-center transition-colors cursor-pointer text-sm font-bold shadow-xs"
+            aria-label="Close modal"
           >
             ✕
           </button>
@@ -1092,7 +1114,7 @@ idea.value = cases.value[3].case.idea
 
           <!-- Vali Co-Pilot Response Bubble -->
           <div class="flex items-start gap-2.5 max-w-[95%] ml-auto flex-row-reverse">
-            <div class="w-7 h-7 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-xs font-black shrink-0 mt-1">
+            <div class="w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-black shrink-0 mt-1 shadow-xs">
               🤖
             </div>
             <div class="bg-emerald-950/60 p-4 rounded-2xl rounded-tr-xs border border-emerald-500/40 text-emerald-100 space-y-3">
