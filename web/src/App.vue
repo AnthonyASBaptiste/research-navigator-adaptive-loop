@@ -22,7 +22,12 @@ import {
   Check,
   Activity,
   Layers,
-  Store
+  Store,
+  MessageCircle,
+  Mic,
+  Volume2,
+  Send,
+  CheckCheck
 } from 'lucide-vue-next'
 
 interface CaseData {
@@ -91,8 +96,9 @@ const validationError = ref<string | null>(null)
 // Pipeline Comparison Mode: 'meta' | 'baseline'
 const pipelineMode = ref<'meta' | 'baseline'>('meta')
 
-// Unlock Roadmap Modal State
+// Unlock Roadmap & Vali Simulator Modal States
 const showUnlockModal = ref(false)
+const showValiModal = ref(false)
 
 const progressMessages = [
   'Routing startup idea to AI Market Specialist...',
@@ -819,12 +825,19 @@ idea.value = cases.value[3].case.idea
 
               <!-- Experiments Grid -->
               <div class="space-y-3">
-                <div class="flex items-center justify-between">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <h5 class="text-[11px] font-black uppercase tracking-wider text-amber-300 flex items-center gap-2">
                     <Target class="w-4 h-4 text-amber-400" />
                     Required Offline Discovery Experiments (The Mom Test)
                   </h5>
-                  <span class="text-[10px] font-bold text-slate-400">Physical World Tasks</span>
+                  <button
+                    @click="showValiModal = true"
+                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-[11px] font-bold border border-emerald-500/40 transition-all cursor-pointer shadow-xs group"
+                  >
+                    <MessageCircle class="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform" />
+                    <span>Simulate Vali Co-Pilot</span>
+                    <span class="text-[9px] px-1.5 py-0.2 rounded-md bg-emerald-500/30 text-emerald-200 uppercase font-black tracking-wider">WhatsApp</span>
+                  </button>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div
@@ -944,6 +957,125 @@ idea.value = cases.value[3].case.idea
             <span>Continue to Full Platform</span>
             <ArrowRight class="w-4 h-4" />
           </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- VALI CO-PILOT SIMULATOR MODAL (WhatsApp Mom Test Voice Note Parser) -->
+    <!-- =================================================================== -->
+    <div
+      v-if="showValiModal"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-xs animate-fade-in"
+    >
+      <div class="bg-slate-900 rounded-3xl max-w-xl w-full border border-emerald-500/30 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+        <!-- WhatsApp-style Header -->
+        <div class="bg-emerald-800 text-white p-4 flex items-center justify-between border-b border-emerald-700/60">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center text-white text-lg font-black shadow-sm">
+              🤖
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h4 class="font-extrabold text-sm text-white">Vali — Startup Validation Co-Pilot</h4>
+                <span class="px-1.5 py-0.2 text-[9px] font-black uppercase bg-emerald-700 text-emerald-200 rounded border border-emerald-600">WhatsApp</span>
+              </div>
+              <div class="text-[11px] text-emerald-200 font-medium">Powered by Fireworks Meta Llama 3.3 70B &bull; The Mom Test</div>
+            </div>
+          </div>
+          <button
+            @click="showValiModal = false"
+            class="text-emerald-200 hover:text-white p-1 rounded-lg hover:bg-emerald-700 transition-colors cursor-pointer text-lg font-bold"
+          >
+            ✕
+          </button>
+        </div>
+
+        <!-- Chat Body -->
+        <div class="p-4 sm:p-6 overflow-y-auto space-y-4 bg-slate-950/60 text-xs">
+          <!-- Venture Context Pill -->
+          <div class="text-center">
+            <span class="px-3 py-1 rounded-full bg-slate-800 text-slate-400 text-[10px] font-mono border border-slate-700">
+              Prescribed Offline Task: 30 Caribbean Merchant Discovery Interviews
+            </span>
+          </div>
+
+          <!-- Inbound Founder Voice Note Bubble -->
+          <div class="flex items-start gap-2.5 max-w-[90%]">
+            <div class="w-7 h-7 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs font-bold shrink-0 mt-1">
+              👤
+            </div>
+            <div class="bg-slate-800 p-3.5 rounded-2xl rounded-tl-xs border border-slate-700 text-slate-200 space-y-2">
+              <div class="flex items-center gap-2 text-[10px] font-bold text-amber-400 uppercase tracking-wider">
+                <Mic class="w-3.5 h-3.5 animate-pulse" />
+                <span>Founder Field Voice Note &bull; Port of Spain (0:42)</span>
+              </div>
+              <p class="italic text-slate-300 leading-relaxed text-[11px] bg-slate-900/60 p-2.5 rounded-xl border border-slate-800">
+                "Just finished interviewing Marcus, who runs 'Island Craft Goods' on Shopify Plus in Port of Spain. He ships to Barbados and Jamaica. He told me: 'Right now, my accountant spends 5 hours every Friday manually pulling Shopify CSVs and filing VAT on the Inland Revenue e-Tax portal. We got hit with a $4,500 penalty last year because of a reconciliation mismatch between WiPay and Shopify. If someone had an app that pushed the invoices automatically to the IRD API, I would gladly pay $50 a month without blinking.'"
+              </p>
+              <div class="text-[9px] text-slate-500 text-right">Today, 2:14 PM &bull; Sent from field</div>
+            </div>
+          </div>
+
+          <!-- Vali Co-Pilot Response Bubble -->
+          <div class="flex items-start gap-2.5 max-w-[95%] ml-auto flex-row-reverse">
+            <div class="w-7 h-7 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-xs font-black shrink-0 mt-1">
+              🤖
+            </div>
+            <div class="bg-emerald-950/60 p-4 rounded-2xl rounded-tr-xs border border-emerald-500/40 text-emerald-100 space-y-3">
+              <div class="flex items-center justify-between border-b border-emerald-800/60 pb-2">
+                <div class="flex items-center gap-1.5 text-[10px] font-black uppercase text-emerald-400 tracking-wider">
+                  <CheckCheck class="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Vali Mom Test Synthesis</span>
+                </div>
+                <span class="text-[9px] font-mono text-emerald-300/80">Fireworks Llama 3.3 70B</span>
+              </div>
+
+              <div class="space-y-1.5">
+                <h5 class="text-[11px] font-extrabold text-white">🔥 Direct Customer Validation Confirmed!</h5>
+                <p class="text-[11px] text-emerald-200/90 leading-relaxed">
+                  Superb field work! You uncovered concrete past behavior without asking hypothetical questions. Notice how Marcus quantified his pain (5 hours weekly + $4,500 penalty) and confirmed past willingness to pay.
+                </p>
+              </div>
+
+              <!-- Extracted Mom Test Evidence Checklist -->
+              <div class="p-2.5 bg-black/30 rounded-xl border border-emerald-800/40 space-y-1.5">
+                <div class="text-[10px] font-bold uppercase text-emerald-300">Extracted Empirical Facts:</div>
+                <ul class="space-y-1 text-[11px] text-slate-200 font-medium">
+                  <li class="flex items-start gap-1.5">
+                    <span class="text-emerald-400 font-bold">✓</span>
+                    <span><strong>Manual Friction:</strong> 5 hours/week spent on CSV-to-IRD manual tax filing</span>
+                  </li>
+                  <li class="flex items-start gap-1.5">
+                    <span class="text-emerald-400 font-bold">✓</span>
+                    <span><strong>Quantified Cost:</strong> $4,500 past penalty incurred from WiPay reconciliation gap</span>
+                  </li>
+                  <li class="flex items-start gap-1.5">
+                    <span class="text-emerald-400 font-bold">✓</span>
+                    <span><strong>Willingness to Pay:</strong> $50/month price point anchored against past penalty</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="flex items-center justify-between text-[10px] text-emerald-300/80 pt-1 border-t border-emerald-900/60">
+                <span>Progress: 1 / 30 Interviews Logged</span>
+                <span class="font-bold text-emerald-400">Roadmap Progress: +3.3%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Footer Actions -->
+        <div class="p-4 bg-slate-900 border-t border-slate-800 flex items-center justify-between gap-3">
+          <div class="text-[11px] text-slate-400 hidden sm:block">
+            CLI Equivalent: <code class="bg-slate-800 px-1.5 py-0.5 rounded text-amber-400 font-mono text-[10px]">python vali_simulator.py --sample</code>
+          </div>
+          <button
+            @click="showValiModal = false"
+            class="w-full sm:w-auto px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-colors cursor-pointer"
+          >
+            Close Simulator
+          </button>
         </div>
       </div>
     </div>
