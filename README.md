@@ -44,9 +44,13 @@ Judges can evaluate and verify the entire agent architecture via the **3-Minute 
 ### 🌐 1. Live Interactive Web Showcase (Zero Installation)
 Visit the live interactive web showcase deployed directly from this repository:
 👉 **[https://meta-hackathon.research-navigator.ai](https://meta-hackathon.research-navigator.ai)**
-* 1-click preset selector for all 5 venture archetypes.
-* Dual execution: **Instant Provenance Replay (< 1s)** vs **Live Meta AI Pipeline (~45s)**.
-* Interactive Vali Co-Pilot simulator for Mom Test field note analysis.
+
+* **1-Click Archetype Matrix**: Instant selection across 5 calibrated startup scenarios with pre-populated hypotheses matching platform handholds.
+* **Side-by-Side Dual Pipeline Comparison**: Real-time toggle between **❌ Generic 1-Pass AI** (the sycophantic 8.6/10 baseline) and **🛡️ Meta AI Epistemic Loop** (adversarial audit, 4.4/10 honest refusal).
+* **Interactive Mathematical Scoring Drawer**: Click `📐 How are these numbers calculated?` to inspect the exact arithmetic weighting: Base TAM × Auditor Rigor - Voids Penalty + Regional SGI.
+* **Persistent Vali WhatsApp Co-Pilot Simulator**: Trigger Marcus's Port of Spain voice note from any view (top nav, hero banner, results toolbar, or experiments card) to simulate Mom Test factual evidence extraction.
+* **Dual Execution Engine**: Switch between **⚡ Instant Replay (< 1s)** using recorded benchmark provenance, or **Live Cloud Run API (~45s)** for multi-agent retrieval with Tavily + Baseten + Fireworks AI.
+* **Seamless Platform Bridge**: Explore the roadmap unlock modal to bridge hackathon findings directly with the full 5-Pillar Workshop platform.
 
 ---
 
@@ -213,7 +217,7 @@ pytest tests/ -v
 ## 🔗 Live Deployments & Provenance
 - **Live Staging Platform**: [https://meta-hackathon.research-navigator.ai](https://meta-hackathon.research-navigator.ai)
 - **Live Cloud Run Demo Backend**: [https://backend-go-412743311224.us-central1.run.app/health](https://backend-go-412743311224.us-central1.run.app/health)
-- **3-Minute Loom Demo Video**: *[Link provided in Devpost Submission]*
+- **3-Minute Loom Demo Video**: [https://www.loom.com/share/9307073f5e31443080ecdbfb0c84c084](https://www.loom.com/share/9307073f5e31443080ecdbfb0c84c084)
 - **Raw Provenance Log**: See [`provenance/eval_results.json`](provenance/eval_results.json) for recorded raw execution metrics.
 
 ---
