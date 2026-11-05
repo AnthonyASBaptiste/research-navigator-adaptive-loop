@@ -8,6 +8,9 @@
 [![Baseten](https://img.shields.io/badge/Inference-Baseten-black)](https://www.baseten.co/)
 [![Fireworks AI](https://img.shields.io/badge/Inference-Fireworks_AI-orange)](https://fireworks.ai/)
 [![Staging Live](https://img.shields.io/badge/Demo-meta--hackathon.research--navigator.ai-green)](https://meta-hackathon.research-navigator.ai)
+[![Demo Video](https://img.shields.io/badge/Demo_Video-Watch_on_Loom-625DF5?logo=loom&logoColor=white)](https://www.loom.com/share/9307073f5e31443080ecdbfb0c84c084)
+
+> 🎬 **3-Minute Loom Video Walkthrough**: [Watch the Demo Video](https://www.loom.com/share/9307073f5e31443080ecdbfb0c84c084)
 
 ---
 
@@ -31,7 +34,12 @@ In strict compliance with the hackathon rules and guidelines, this public reposi
 
 ## ⚡ Quickstart for Judges (< 60 Seconds)
 
-Judges can evaluate and verify the entire agent architecture via the **Live Web Showcase**, via the **CLI with zero API keys**, or in **Live Meta AI mode**.
+Judges can evaluate and verify the entire agent architecture via the **3-Minute Loom Demo Video**, via the **Live Web Showcase**, via the **CLI with zero API keys**, or in **Live Meta AI mode**.
+
+### 🎬 0. Watch the 3-Minute Video Walkthrough
+👉 **[Watch the Turnkey Loom Demo Video](https://www.loom.com/share/9307073f5e31443080ecdbfb0c84c084)**
+
+---
 
 ### 🌐 1. Live Interactive Web Showcase (Zero Installation)
 Visit the live interactive web showcase deployed directly from this repository:
