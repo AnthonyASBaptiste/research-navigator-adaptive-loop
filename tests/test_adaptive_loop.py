@@ -119,3 +119,52 @@ def test_calculate_calibrated_score():
     # Expected: (80 * 0.45) + (0.8 * 12) - (6 * 3.5) = 36 + 9.6 - 21 = 24.6
     assert 20.0 <= adaptive_score <= 35.0
     assert adaptive_score < base_score
+
+
+@pytest.mark.asyncio
+async def test_pipeline_run_research_mocked(monkeypatch):
+    """
+    Guarantees pipeline.run_research() executes without prompt formatting
+    or attribute lookup errors (protects against F-01 and F-02 regressions).
+    """
+    from adaptive_loop.pipeline import AdaptiveResearchPipeline
+    import json
+
+    pipeline = AdaptiveResearchPipeline()
+
+    async def mock_call_llm(role, system_prompt, user_prompt):
+        if role == "planner":
+            return json.dumps({"questions": ["Is there local market demand?"]})
+        elif role == "market_analyst":
+            return json.dumps({"summary": "Market analysis complete", "market_score": 70.0})
+        elif role == "audit":
+            return json.dumps({
+                "readiness_status": "NEEDS_TARGETED_RESEARCH",
+                "confidence_score": 0.50,
+                "evidence_voids": ["Void 1"],
+                "targeted_queries": ["Pricing in Trinidad"],
+                "required_offline_experiments": ["Interview 10 merchants"]
+            })
+        return "{}"
+
+    async def mock_search_web(query, region="caribbean", ledger=None, round_num=1):
+        if ledger:
+            ledger.add_source(url="https://ird.gov.tt/vat", title="Inland Revenue VAT rules", content="VAT guidelines", round_num=round_num)
+        return "Authoritative VAT guidelines from IRD."
+
+    monkeypatch.setattr(pipeline, "_call_llm", mock_call_llm)
+    monkeypatch.setattr(pipeline, "_search_web", mock_search_web)
+
+    # Test Adaptive Loop execution
+    res = await pipeline.run_research(
+        startup_idea="Caribbean Shopify VAT Plugin",
+        region="caribbean",
+        adaptive=True
+    )
+
+    assert "score" in res
+    assert res["score"] > 0
+    assert len(res["adaptive_loop"]["evidence_voids"]) > 0
+    assert len(res["adaptive_loop"]["offline_experiments"]) > 0
+    assert res["adaptive_loop"]["rounds_executed"] == 2
+

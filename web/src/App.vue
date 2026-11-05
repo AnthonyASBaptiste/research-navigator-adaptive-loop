@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import rawCases from './data/benchmarkCases.json'
 import {
   Compass,
@@ -296,21 +296,34 @@ const oddsCurrent = computed(() => {
 const scoringBreakdown = computed(() => {
   const isMeta = pipelineMode.value === 'meta'
   const voids = activeEvidentiaryVoids.value.length
-  const baseTam = isMeta ? 6.5 : 8.6
+  const finalScoreVal = activeScore.value
   const voidPenalty = isMeta ? Number((voids * 0.35).toFixed(1)) : 0
   const sgi = currentCase.value.adaptive.source_grounding_index || 1.0
   const regionalBonus = isMeta ? Number((sgi * 1.2).toFixed(1)) : 0
+  
+  // Reconcile base so the arithmetic (base - penalty + bonus) evaluates exactly to finalScoreVal:
+  const auditedBase = isMeta ? Number((finalScoreVal + voidPenalty - regionalBonus).toFixed(1)) : finalScoreVal
 
   return {
-    baseTam: baseTam.toFixed(1),
+    auditedBase: auditedBase.toFixed(1),
     confidencePct: activeConfidence.value,
     voidsCount: voids,
     voidPenalty: voidPenalty.toFixed(1),
     sgiPercent: Math.round(sgi * 100),
     regionalBonus: regionalBonus.toFixed(1),
-    finalScore: activeScore.value.toFixed(1),
+    finalScore: finalScoreVal.toFixed(1),
     validationOdds: oddsCurrent.value
   }
+})
+
+onMounted(() => {
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      showValiModal.value = false
+      showUnlockModal.value = false
+      showMathBreakdown.value = false
+    }
+  })
 })
 
 const getIndicatorMeta = (category: string) => {
@@ -479,11 +492,13 @@ idea.value = cases.value[3].case.idea
             <button
               v-for="(c, idx) in cases"
               :key="c.case.id"
-              @click="selectArchetype(idx, true)"
-              class="p-3 bg-white hover:bg-emerald-50/60 rounded-2xl border transition-all text-left flex items-start gap-3 cursor-pointer group shadow-2xs"
+              :disabled="isLoading"
+              @click="!isLoading && selectArchetype(idx, true)"
+              class="p-3 bg-white rounded-2xl border transition-all text-left flex items-start gap-3 group shadow-2xs"
               :class="[
                 selectedCaseIndex === idx ? 'border-emerald-500 ring-2 ring-emerald-500/20 bg-emerald-50/30' : 'border-slate-200 hover:border-emerald-300',
-                idx === 4 ? 'sm:col-span-2' : ''
+                idx === 4 ? 'sm:col-span-2' : '',
+                isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-emerald-50/60 cursor-pointer'
               ]"
             >
               <span class="w-6 h-6 rounded-lg bg-slate-100 group-hover:bg-slate-900 text-slate-700 group-hover:text-white text-xs font-black flex items-center justify-center shrink-0 mt-0.5 transition-colors">
@@ -785,7 +800,7 @@ idea.value = cases.value[3].case.idea
             </div>
 
             <!-- Status Badge -->
-            <div class="inline-flex items-center px-8 py-3 rounded-full bg-white/20 backdrop-blur-md border border-white/30 font-black text-xs uppercase tracking-[0.3em] shadow-lg">
+            <div class="inline-flex items-center justify-center max-w-full px-5 sm:px-8 py-2.5 sm:py-3 rounded-full bg-white/20 backdrop-blur-md border border-white/30 font-black text-[11px] sm:text-xs uppercase tracking-wider sm:tracking-[0.25em] text-center shadow-lg">
               <span v-if="isFieldDiscovery" class="flex items-center gap-2">
                 <Compass class="w-4 h-4 animate-pulse" />
                 FIELD DISCOVERY &bull; PIONEER OPPORTUNITY
@@ -830,8 +845,8 @@ idea.value = cases.value[3].case.idea
 
               <div class="space-y-2 font-mono text-[11px]">
                 <div class="flex justify-between items-center text-white/90">
-                  <span>1. Base Market Opportunity (TAM/Need):</span>
-                  <span class="font-bold text-white bg-white/10 px-2 py-0.5 rounded">{{ scoringBreakdown.baseTam }} / 10</span>
+                  <span>1. Audited Market Opportunity:</span>
+                  <span class="font-bold text-white bg-white/10 px-2 py-0.5 rounded">{{ scoringBreakdown.auditedBase }} / 10</span>
                 </div>
                 <div class="flex justify-between items-center text-white/90">
                   <span>2. × Epistemic Auditor Rigor:</span>

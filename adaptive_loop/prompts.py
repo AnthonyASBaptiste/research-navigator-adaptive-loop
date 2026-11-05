@@ -952,3 +952,8 @@ Reference Structure to follow:
 
 Remember: ZERO BRACKET PLACEHOLDERS. Replace all examples with realistic details for '{idea}'. Output pure Markdown only.
 """
+
+# Backwards-compatible aliases for pipeline orchestrator
+PLANNER_SYSTEM = RESEARCH_PLANNER_SYSTEM
+MARKET_ANALYST_SYSTEM = INSIGHT_EXTRACTOR_SYSTEM
+
