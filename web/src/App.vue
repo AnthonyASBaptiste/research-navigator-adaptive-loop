@@ -402,11 +402,21 @@ idea.value = cases.value[3].case.idea
           </div>
         </div>
 
-        <div class="flex items-center gap-3 text-xs font-bold">
+        <div class="flex items-center gap-2.5 text-xs font-bold">
+          <!-- Always-Visible Vali Co-Pilot Button in Top Nav -->
+          <button
+            @click="showValiModal = true"
+            class="flex items-center gap-1.5 px-3 py-1.5 min-h-[36px] rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs transition-all shadow-xs hover:shadow cursor-pointer"
+          >
+            <MessageCircle class="w-3.5 h-3.5" />
+            <span>Simulate Vali Co-Pilot</span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded-md bg-emerald-700 text-emerald-100 uppercase font-black tracking-wider hidden sm:inline">WhatsApp</span>
+          </button>
+
           <a
             href="https://github.com/AnthonyASBaptiste/research-navigator-adaptive-loop"
             target="_blank"
-            class="hidden sm:flex items-center gap-1.5 px-3.5 py-2 min-h-[36px] rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
+            class="hidden md:flex items-center gap-1.5 px-3.5 py-2 min-h-[36px] rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
           >
             <FileCode2 class="w-3.5 h-3.5 text-slate-600" />
             <span>GitHub</span>
@@ -415,7 +425,7 @@ idea.value = cases.value[3].case.idea
           <a
             href="https://app.research-navigator.ai"
             target="_blank"
-            class="flex items-center gap-1.5 px-4 py-2 min-h-[36px] rounded-xl bg-[color:var(--brand-primary)] hover:bg-[color:var(--brand-dark)] text-white font-bold transition-all shadow-xs cursor-pointer"
+            class="hidden sm:flex items-center gap-1.5 px-4 py-2 min-h-[36px] rounded-xl bg-[color:var(--brand-primary)] hover:bg-[color:var(--brand-dark)] text-white font-bold transition-all shadow-xs cursor-pointer"
           >
             <span>Full Platform</span>
             <ExternalLink class="w-3 h-3" />
@@ -478,6 +488,30 @@ idea.value = cases.value[3].case.idea
               </div>
             </button>
           </div>
+        </div>
+
+        <!-- Vali WhatsApp Co-Pilot Field Discovery Callout -->
+        <div class="max-w-xl mx-auto p-3.5 bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 rounded-2xl border border-emerald-200/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-sm shadow-xs shrink-0">
+              💬
+            </div>
+            <div>
+              <div class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                <span>Want to see how field discovery works?</span>
+                <span class="px-1.5 py-0.2 rounded text-[9px] font-black uppercase bg-emerald-100 text-emerald-800 border border-emerald-300">Live Demo</span>
+              </div>
+              <div class="text-[11px] text-slate-600">Simulate Marcus's Port of Spain voice note parsed via Fireworks Llama 3.3.</div>
+            </div>
+          </div>
+          <button
+            type="button"
+            @click="showValiModal = true"
+            class="w-full sm:w-auto px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs transition-all cursor-pointer flex items-center justify-center gap-1.5 shrink-0 shadow-xs"
+          >
+            <MessageCircle class="w-3.5 h-3.5" />
+            <span>Simulate Vali Co-Pilot</span>
+          </button>
         </div>
 
         <!-- Exact IdeaInput Card from Platform -->
@@ -643,6 +677,16 @@ idea.value = cases.value[3].case.idea
             class="px-4 py-2 text-xs font-bold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors cursor-pointer flex items-center justify-center gap-1.5"
           >
             <span>&larr; Test Another Startup Idea</span>
+          </button>
+
+          <!-- Always-Visible Vali Co-Pilot Launcher in Results Toolbar -->
+          <button
+            @click="showValiModal = true"
+            class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-2 shadow-xs hover:shadow"
+          >
+            <MessageCircle class="w-4 h-4 text-white" />
+            <span>Simulate Vali Co-Pilot</span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded-md bg-emerald-700 text-emerald-100 uppercase font-black tracking-wider">WhatsApp</span>
           </button>
 
           <!-- The Hackathon Innovation: Switch between Baseline vs Meta AI Loop -->
@@ -926,11 +970,11 @@ idea.value = cases.value[3].case.idea
                   </h5>
                   <button
                     @click="showValiModal = true"
-                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-[11px] font-bold border border-emerald-500/40 transition-all cursor-pointer shadow-xs group"
+                    class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-black transition-all cursor-pointer shadow-md hover:shadow-lg group"
                   >
-                    <MessageCircle class="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform" />
+                    <MessageCircle class="w-4 h-4 text-slate-950" />
                     <span>Simulate Vali Co-Pilot</span>
-                    <span class="text-[9px] px-1.5 py-0.2 rounded-md bg-emerald-500/30 text-emerald-200 uppercase font-black tracking-wider">WhatsApp</span>
+                    <span class="text-[9px] px-1.5 py-0.5 rounded-md bg-emerald-700 text-white uppercase font-black tracking-wider">WhatsApp</span>
                   </button>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
